@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { formatNumber } from '../../../lib/format';
 import { facts, type Facts } from '../../facts';
-import { validateCase, type CaseContent } from '../types';
+import { collectStrings, visibleStrings } from '../test-utils';
+import { validateCase } from '../types';
 import { buildCase } from './event-ticketing-platform';
 
 /** 只改活動平台四個欄位的兩組假事實；四個值彼此都不同，也不同於正式的事實。 */
@@ -34,30 +35,6 @@ function rawValues(input: Facts): string[] {
     formatNumber(eventPlatform.loadTestRequests),
     String(eventPlatform.loadTestRequests),
     formatNumber(eventPlatform.e2eIssuesFixed),
-  ];
-}
-
-/** 取出案例內容裡全部的字串。 */
-function collectStrings(value: unknown): string[] {
-  if (typeof value === 'string') return [value];
-  if (Array.isArray(value)) return value.flatMap(collectStrings);
-  if (value !== null && typeof value === 'object') return Object.values(value).flatMap(collectStrings);
-  return [];
-}
-
-/** 頁面會顯示的文字（不含網址代號與圖代號）。 */
-function visibleStrings(content: CaseContent): string[] {
-  return [
-    content.title,
-    content.summary,
-    content.period,
-    content.role,
-    ...content.tech,
-    content.maturity,
-    ...content.sections.flatMap((section) => [section.heading, ...section.paragraphs]),
-    ...content.results,
-    ...content.faq.flatMap((item) => [item.question, item.answer]),
-    content.aiNote,
   ];
 }
 

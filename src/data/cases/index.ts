@@ -6,13 +6,15 @@ import type { Locale } from '../../lib/format';
 import type { Facts } from '../facts';
 import { validateCase, type CaseContent } from './types';
 import { buildCase as buildEventTicketingPlatform } from './zh-TW/event-ticketing-platform';
+import { buildCase as buildMemberMilestoneRewards } from './zh-TW/member-milestone-rewards';
+import { buildCase as buildPersonalRagKnowledgePlatform } from './zh-TW/personal-rag-knowledge-platform';
 
 /** 產生一個案例的函式。 */
 export type CaseBuilder = (facts: Facts) => CaseContent;
 
 /** 各語系有哪些案例。英文版在第二批補上。 */
 const CASE_BUILDERS: Record<Locale, CaseBuilder[]> = {
-  'zh-TW': [buildEventTicketingPlatform],
+  'zh-TW': [buildEventTicketingPlatform, buildMemberMilestoneRewards, buildPersonalRagKnowledgePlatform],
   en: [],
 };
 

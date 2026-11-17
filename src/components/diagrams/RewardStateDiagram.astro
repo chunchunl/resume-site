@@ -1,0 +1,106 @@
+---
+/**
+ * 會員運動里程碑獎勵系統的狀態圖（概念層級的自製示意，不描摹真實畫面）。
+ * 只畫會員與店舖看得懂的六個階段與轉店；不寫內部狀態代碼、門檻天數、截止日規則與資料表名稱。
+ * 顏色全部來自設計變數（透過 class），不用 style 屬性。
+ */
+const titleId = 'reward-states-title';
+const descId = 'reward-states-desc';
+const markerId = 'reward-states-arrow';
+
+/** 主線的六個階段；縱向位置由索引算出。 */
+const STATES = [
+  { label: '累積中', note: '會員看得到自己的進度' },
+  { label: '可登記尺寸', note: '快達成時提醒登記尺寸' },
+  { label: '已滿百', note: '達成里程碑，可以領取' },
+  { label: '已訂購', note: '店舖依名單訂購' },
+  { label: '已到貨', note: 'T 恤送到店舖' },
+  { label: '已領取', note: '店舖人員標記領取' },
+];
+const TOP = 16;
+const STATE_HEIGHT = 56;
+const STATE_PITCH = 80;
+const stateY = (index: number): number => TOP + index * STATE_PITCH;
+
+/** 轉店時由新店舖接手的階段（還沒領取）：從「可登記尺寸」到「已到貨」。 */
+const TRANSFER_FROM = 1;
+const TRANSFER_TO = 4;
+const transferTop = stateY(TRANSFER_FROM);
+const transferBottom = stateY(TRANSFER_TO) + STATE_HEIGHT;
+const TRANSFER_LINES = ['會員轉店時', '新店舖接手', '還沒領取的', '獎勵'];
+
+const captionY = stateY(STATES.length) + 8;
+const viewHeight = captionY + 16;
+---
+
+<figure class="diagram">
+  <svg viewBox={`0 0 360 ${viewHeight}`} role="img" aria-labelledby={titleId} aria-describedby={descId} xmlns="http://www.w3.org/2000/svg">
+    <title id={titleId}>獎勵紀錄的狀態變化</title>
+    <desc id={descId}>
+      會員累積運動次數，快達成里程碑時可以登記尺寸；達成後可以領取，店舖訂購、到貨後標記已領取。會員轉店時，新店舖會接手還沒領取的獎勵。每達成一次里程碑，就建立一筆新紀錄。
+    </desc>
+    <defs>
+      <marker id={markerId} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+        <path class="diagram__arrowhead" d="M0 0 L10 5 L0 10 Z"></path>
+      </marker>
+    </defs>
+
+    {
+      STATES.map((state, index) => (
+        <g>
+          <rect class="diagram__box" x="8" y={stateY(index)} width="220" height={STATE_HEIGHT} rx="10"></rect>
+          <text class="diagram__step" x="28" y={stateY(index) + 24}>
+            {index + 1}
+          </text>
+          <text class="diagram__label" x="48" y={stateY(index) + 24}>
+            {state.label}
+          </text>
+          <text class="diagram__note" x="48" y={stateY(index) + 46}>
+            {state.note}
+          </text>
+          {index < STATES.length - 1 && (
+            <line
+              class="diagram__line"
+              x1="118"
+              y1={stateY(index) + STATE_HEIGHT}
+              x2="118"
+              y2={stateY(index + 1) - 2}
+              marker-end={`url(#${markerId})`}
+            ></line>
+          )}
+          {index >= TRANSFER_FROM && index <= TRANSFER_TO && (
+            <line
+              class="diagram__line diagram__line--dashed"
+              x1="228"
+              y1={stateY(index) + STATE_HEIGHT / 2}
+              x2="252"
+              y2={stateY(index) + STATE_HEIGHT / 2}
+            ></line>
+          )}
+        </g>
+      ))
+    }
+
+    <rect
+      class="diagram__box diagram__box--soft"
+      x="252"
+      y={transferTop}
+      width="100"
+      height={transferBottom - transferTop}
+      rx="10"
+    ></rect>
+    <text class="diagram__label" x="302" y={transferTop + 40} text-anchor="middle">轉店</text>
+    {
+      TRANSFER_LINES.map((line, index) => (
+        <text class="diagram__note" x="302" y={transferTop + 88 + index * 24} text-anchor="middle">
+          {line}
+        </text>
+      ))
+    }
+
+    <text class="diagram__caption" x="8" y={captionY}>每達成一次里程碑，就建立一筆新紀錄</text>
+  </svg>
+  <figcaption>
+    圖：一筆獎勵紀錄從累積中、登記尺寸、達成、訂購、到貨到領取；會員轉店時，新店舖會接手還沒領取的獎勵。
+  </figcaption>
+</figure>

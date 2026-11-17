@@ -1,0 +1,129 @@
+---
+/**
+ * 個人 AI 知識平台的資料流圖（自製示意，不放問答畫面與知識庫內容）。
+ * 資料來源 → 自動同步 → 向量索引 → 問答 → LINE 與網站兩個入口，並標出存取控制的位置。
+ * 不寫子網域、secret 名稱與白名單內容。
+ */
+const titleId = 'rag-data-flow-title';
+const descId = 'rag-data-flow-desc';
+const markerId = 'rag-data-flow-arrow';
+
+/** 主線的四個步驟；縱向位置由索引算出。 */
+const STEPS = [
+  { label: '個人筆記', note: '筆記更新後自動觸發同步' },
+  { label: '自動同步', note: '切成段落、轉成向量；持憑證才能寫入' },
+  { label: '向量索引', note: 'Vectorize 存放段落向量' },
+  { label: '問答', note: '找出相關段落，交給 Workers AI 回答' },
+];
+const TOP = 16;
+const STEP_HEIGHT = 56;
+const STEP_PITCH = 80;
+const stepY = (index: number): number => TOP + index * STEP_PITCH;
+
+/** 兩個入口與各自的存取控制；左右兩欄。 */
+const COLUMN_WIDTH = 168;
+const ENTRIES = [
+  { x: 8, label: 'LINE', note: 'Messaging API', guard: '使用者白名單' },
+  { x: 184, label: '網站', note: '瀏覽器提問', guard: 'Cloudflare Access' },
+];
+const entryY = stepY(STEPS.length) + 8;
+const ENTRY_HEIGHT = 56;
+const guardY = entryY + ENTRY_HEIGHT + 24;
+const GUARD_HEIGHT = 64;
+const userY = guardY + GUARD_HEIGHT + 32;
+const viewHeight = userY + 16;
+const columnCenter = (x: number): number => x + COLUMN_WIDTH / 2;
+---
+
+<figure class="diagram">
+  <svg viewBox={`0 0 360 ${viewHeight}`} role="img" aria-labelledby={titleId} aria-describedby={descId} xmlns="http://www.w3.org/2000/svg">
+    <title id={titleId}>個人 AI 知識平台的資料流</title>
+    <desc id={descId}>
+      個人筆記更新後自動同步，切成段落並轉成向量存進向量索引；提問時找出相關段落，交給 Workers AI 回答。回答從 LINE 或網站兩個入口回到使用者：LINE 入口用使用者白名單把關，網站用 Cloudflare Access 登入把關，名單以外一律拒絕。
+    </desc>
+    <defs>
+      <marker id={markerId} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+        <path class="diagram__arrowhead" d="M0 0 L10 5 L0 10 Z"></path>
+      </marker>
+    </defs>
+
+    {
+      STEPS.map((step, index) => (
+        <g>
+          <rect class="diagram__box" x="8" y={stepY(index)} width="344" height={STEP_HEIGHT} rx="10"></rect>
+          <text class="diagram__label" x="180" y={stepY(index) + 24} text-anchor="middle">
+            {step.label}
+          </text>
+          <text class="diagram__note" x="180" y={stepY(index) + 46} text-anchor="middle">
+            {step.note}
+          </text>
+          {index < STEPS.length - 1 && (
+            <line
+              class="diagram__line"
+              x1="180"
+              y1={stepY(index) + STEP_HEIGHT}
+              x2="180"
+              y2={stepY(index + 1) - 2}
+              marker-end={`url(#${markerId})`}
+            ></line>
+          )}
+        </g>
+      ))
+    }
+
+    {
+      ENTRIES.map((entry) => (
+        <g>
+          <line
+            class="diagram__line"
+            x1="180"
+            y1={stepY(STEPS.length - 1) + STEP_HEIGHT}
+            x2={columnCenter(entry.x)}
+            y2={entryY - 2}
+            marker-end={`url(#${markerId})`}
+          ></line>
+          <rect class="diagram__box" x={entry.x} y={entryY} width={COLUMN_WIDTH} height={ENTRY_HEIGHT} rx="10"></rect>
+          <text class="diagram__label" x={columnCenter(entry.x)} y={entryY + 24} text-anchor="middle">
+            {entry.label}
+          </text>
+          <text class="diagram__note" x={columnCenter(entry.x)} y={entryY + 46} text-anchor="middle">
+            {entry.note}
+          </text>
+          <line
+            class="diagram__line diagram__line--dashed"
+            x1={columnCenter(entry.x)}
+            y1={entryY + ENTRY_HEIGHT}
+            x2={columnCenter(entry.x)}
+            y2={guardY}
+          ></line>
+          <rect
+            class="diagram__box diagram__box--soft"
+            x={entry.x}
+            y={guardY}
+            width={COLUMN_WIDTH}
+            height={GUARD_HEIGHT}
+            rx="10"
+          ></rect>
+          <text class="diagram__label" x={columnCenter(entry.x)} y={guardY + 26} text-anchor="middle">
+            存取控制
+          </text>
+          <text class="diagram__note" x={columnCenter(entry.x)} y={guardY + 48} text-anchor="middle">
+            {entry.guard}
+          </text>
+          <line
+            class="diagram__line diagram__line--dashed"
+            x1={columnCenter(entry.x)}
+            y1={guardY + GUARD_HEIGHT}
+            x2={columnCenter(entry.x)}
+            y2={userY - 20}
+          ></line>
+        </g>
+      ))
+    }
+
+    <text class="diagram__caption" x="180" y={userY} text-anchor="middle">只有我本人通過，名單以外一律拒絕</text>
+  </svg>
+  <figcaption>
+    圖：筆記同步進向量索引，提問時找出相關段落再回答；LINE 與網站兩個入口各有存取控制，只開放給我本人。
+  </figcaption>
+</figure>

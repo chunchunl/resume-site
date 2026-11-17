@@ -6,7 +6,7 @@
 import type { Locale } from '../../lib/format';
 
 /** 案例頁可以使用的圖；代號對應的元件在案例頁模板裡用對照表取得。 */
-export const DIAGRAM_IDS = ['event-flow', 'event-architecture'] as const;
+export const DIAGRAM_IDS = ['event-flow', 'event-architecture', 'reward-states', 'rag-data-flow'] as const;
 
 /** 圖的代號。 */
 export type DiagramId = (typeof DIAGRAM_IDS)[number];

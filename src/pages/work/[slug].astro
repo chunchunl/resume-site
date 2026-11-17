@@ -9,6 +9,8 @@ import Breadcrumb from '../../components/Breadcrumb.astro';
 import CaseSummaryTable from '../../components/CaseSummaryTable.astro';
 import EventArchitectureDiagram from '../../components/diagrams/EventArchitectureDiagram.astro';
 import EventFlowDiagram from '../../components/diagrams/EventFlowDiagram.astro';
+import RagDataFlowDiagram from '../../components/diagrams/RagDataFlowDiagram.astro';
+import RewardStateDiagram from '../../components/diagrams/RewardStateDiagram.astro';
 import FaqSection from '../../components/FaqSection.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCases } from '../../data/cases';
@@ -30,6 +32,8 @@ interface Props {
 const DIAGRAMS: Record<DiagramId, typeof EventFlowDiagram> = {
   'event-flow': EventFlowDiagram,
   'event-architecture': EventArchitectureDiagram,
+  'reward-states': RewardStateDiagram,
+  'rag-data-flow': RagDataFlowDiagram,
 };
 
 const { content } = Astro.props;
