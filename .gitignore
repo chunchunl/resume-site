@@ -1,0 +1,26 @@
+# build 產物（只忽略根目錄的 dist，不要連 tests/dist 一起忽略）
+/dist/
+
+# Astro 產生的型別
+/.astro/
+
+# 相依套件
+/node_modules/
+
+# 紀錄檔
+npm-debug.log*
+
+# 環境變數與本機設定（不進版控）
+.env
+.env.*
+!.env.example
+.dev.vars
+.wrangler/
+*.local.md
+scan-sensitive.local.json
+
+# 作業系統與編輯器
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

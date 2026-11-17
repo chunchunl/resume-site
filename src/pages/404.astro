@@ -1,0 +1,14 @@
+---
+/** 找不到頁面時顯示的頁面；不讓搜尋引擎收錄。 */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../data/site';
+---
+
+<BaseLayout
+  title={`找不到頁面｜${site.name} ${site.alternateName}`}
+  description="這個網址沒有內容，請回到首頁。"
+  noindex
+>
+  <h1>找不到這個頁面</h1>
+  <p><a href="/">回到首頁</a></p>
+</BaseLayout>

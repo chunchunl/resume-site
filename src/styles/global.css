@@ -1,0 +1,11 @@
+/*
+ * 全站設計變數與基礎樣式。
+ * 視覺設計在後續工作補上；這裡先放系統字型，不載入外部字型。
+ */
+:root {
+  --font-sans: system-ui, -apple-system, 'Segoe UI', 'PingFang TC', 'Microsoft JhengHei', 'Noto Sans TC', sans-serif;
+}
+
+html {
+  font-family: var(--font-sans);
+}

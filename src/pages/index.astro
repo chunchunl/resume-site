@@ -1,0 +1,11 @@
+---
+/** 首頁。目前只有標題，內容在後續工作補上。 */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../data/site';
+
+const fullName = `${site.name} ${site.alternateName}`;
+---
+
+<BaseLayout title={`${fullName}｜${site.jobTitle}`} description={`${fullName}，${site.jobTitle}。${site.tagline}`}>
+  <h1>{fullName}</h1>
+</BaseLayout>

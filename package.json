@@ -1,0 +1,41 @@
+{
+  "name": "resume-site",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "description": "林昱均 Erica Lin 的個人履歷與接案網站",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "typecheck": "astro check",
+    "lint": "eslint . --max-warnings 0",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:dist": "vitest run --config vitest.dist.config.ts",
+    "check:facts": "tsx scripts/check-hardcoded-facts.ts",
+    "check:content": "astro build && tsx scripts/check-content.ts",
+    "scan:sensitive": "tsx scripts/scan-sensitive.ts",
+    "verify": "npm run typecheck && npm run lint && npm run test && npm run check:facts && npm run build && npm run test:dist && npm run scan:sensitive"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.5",
+    "astro": "~7.3.8"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.12",
+    "@eslint/js": "^10.0.0",
+    "@types/node": "^22.12.0",
+    "cheerio": "^1.2.0",
+    "eslint": "^10.15.0",
+    "eslint-plugin-astro": "^3.2.1",
+    "globals": "^17.0.0",
+    "tsx": "^4.23.15",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.73.0",
+    "vitest": "^5.1.0"
+  }
+}

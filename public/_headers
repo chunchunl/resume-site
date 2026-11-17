@@ -1,0 +1,9 @@
+# 全站回應標頭。
+# CSP 只允許同源資源，所以頁面不能有行內 script、<style> 元素與 style 屬性；
+# build 產物測試會檢查。之後若加入流量統計，再把它需要的來源加進 script-src 與 connect-src。
+/*
+  Strict-Transport-Security: max-age=31536000
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'none'; upgrade-insecure-requests
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
