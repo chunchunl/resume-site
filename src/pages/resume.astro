@@ -1,0 +1,83 @@
+---
+/**
+ * 求職頁：專業摘要、工作經歷、技能、學歷與培訓、可到職時間，並提供同內容的 PDF 下載。
+ * 公開 PDF 由這一頁的列印樣式產生（`npm run build:pdf`），所以主要內容裡的連結一律寫完整網址，
+ * PDF 裡才不會出現本機預覽的網址；下載連結在列印時隱藏。
+ */
+import ResumeEntryList from '../components/ResumeEntryList.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { facts } from '../data/facts';
+import { buildResume } from '../data/resume';
+import { site } from '../data/site';
+
+const content = buildResume(facts, site);
+const siteHost = new URL(content.contact.url).host;
+---
+
+<BaseLayout
+  title={content.title}
+  description={`${content.name} 的求職履歷：專業摘要、工作經歷、技能、學歷與可到職時間，可下載 PDF。`}
+>
+  <div class="container resume">
+    <div class="resume-header">
+      <p class="resume-header__eyebrow">求職履歷</p>
+      <h1 class="page-title resume-header__name">{content.name}</h1>
+      <p class="resume-header__role">{content.jobTitle}</p>
+      <ul class="resume-header__contact">
+        {
+          content.contact.email && (
+            <li>
+              <a href={`mailto:${content.contact.email}`}>{content.contact.email}</a>
+            </li>
+          )
+        }
+        <li>
+          <a href={content.contact.url}>{siteHost}</a>
+        </li>
+      </ul>
+      <p class="resume-download">
+        <a class="button button--primary" href={content.download.href} download>{content.download.label}</a>
+      </p>
+    </div>
+
+    <section class="resume-section" data-section="summary" aria-labelledby="resume-summary-title">
+      <h2 class="resume-section__title" id="resume-summary-title">{content.headings.summary}</h2>
+      <p class="resume-summary">{content.summary}</p>
+    </section>
+
+    <section class="resume-section" data-section="experience" aria-labelledby="resume-experience-title">
+      <h2 class="resume-section__title" id="resume-experience-title">{content.headings.experience}</h2>
+      <ResumeEntryList entries={content.experience} />
+    </section>
+
+    <section class="resume-section" data-section="skills" aria-labelledby="resume-skills-title">
+      <h2 class="resume-section__title" id="resume-skills-title">{content.headings.skills}</h2>
+      <dl class="resume-skills">
+        {
+          content.skills.map((group) => (
+            <div class="resume-skills__group">
+              <dt class="resume-skills__name">{group.name}</dt>
+              <dd>
+                <ul class="resume-skills__items">
+                  {group.items.map((item) => (
+                    <li>{item}</li>
+                  ))}
+                </ul>
+              </dd>
+            </div>
+          ))
+        }
+      </dl>
+    </section>
+
+    <section class="resume-section" data-section="education" aria-labelledby="resume-education-title">
+      <h2 class="resume-section__title" id="resume-education-title">{content.headings.education}</h2>
+      <ResumeEntryList entries={content.education} />
+    </section>
+
+    <section class="resume-section" data-section="availability" aria-labelledby="resume-availability-title">
+      <h2 class="resume-section__title" id="resume-availability-title">{content.headings.availability}</h2>
+      <p>{content.availability}</p>
+    </section>
+  </div>
+</BaseLayout>

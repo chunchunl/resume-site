@@ -891,6 +891,110 @@ a:hover {
   list-style: decimal;
 }
 
+/* ---------- 求職履歷 ---------- */
+
+.resume {
+  max-width: 52rem;
+  padding-block: var(--space-7);
+}
+
+.resume-header__eyebrow {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  font-weight: 700;
+}
+
+.resume-header__name {
+  margin-top: var(--space-2);
+}
+
+.resume-header__role {
+  margin-top: var(--space-2);
+  font-size: var(--text-lg);
+}
+
+.resume-header__contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-5);
+  margin-top: var(--space-3);
+}
+
+.resume-download {
+  margin-top: var(--space-5);
+}
+
+.resume-section {
+  margin-top: var(--space-7);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--color-border);
+}
+
+.resume-section__title {
+  font-size: var(--text-2xl);
+}
+
+.resume-section > p,
+.resume-entries,
+.resume-skills {
+  margin-top: var(--space-4);
+}
+
+.resume-entries {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.resume-entry__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0 var(--space-4);
+}
+
+.resume-entry__org {
+  font-size: var(--text-lg);
+}
+
+.resume-entry__period,
+.resume-entry__role {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.resume-entry__points {
+  display: grid;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+  padding-left: var(--space-5);
+  list-style: disc;
+}
+
+.resume-skills {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.resume-skills__name {
+  font-weight: 700;
+}
+
+.resume-skills__items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+.resume-skills__items li {
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-sm);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+}
+
 /* ---------- 平板以上 ---------- */
 
 @media (min-width: 48rem) {
@@ -942,3 +1046,59 @@ a:hover {
   }
 }
 
+/* ---------- 列印（求職頁的公開 PDF 由這段產生） ---------- */
+
+@media print {
+  @page {
+    size: A4;
+    margin: 16mm 15mm;
+  }
+
+  :root {
+    --container-padding: 0;
+  }
+
+  html {
+    font-size: 87.5%;
+    color: #000000;
+    background: #ffffff;
+  }
+
+  /* 全站導覽、頁尾、跳到主要內容與下載連結只在螢幕上有用。 */
+  .skip-link,
+  .site-header,
+  .site-footer,
+  .resume-download {
+    display: none;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .resume {
+    max-width: none;
+    padding-block: 0;
+  }
+
+  .resume-header__name {
+    font-size: 2rem;
+  }
+
+  .resume-section {
+    margin-top: var(--space-5);
+    padding-top: var(--space-3);
+  }
+
+  .resume-section__title {
+    font-size: var(--text-xl);
+    break-after: avoid;
+  }
+
+  /* 單一經歷、單一技能組不分頁切斷。 */
+  .resume-entry,
+  .resume-skills__group {
+    break-inside: avoid;
+  }
+}

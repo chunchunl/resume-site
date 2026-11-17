@@ -48,7 +48,14 @@ export interface AllowedFinding {
  * 逐筆允許清單。規則誤判時，把那一筆加在這裡並寫明理由，
  * 不要把整個檔案加進排除清單。
  */
-export const ALLOWED_FINDINGS: readonly AllowedFinding[] = [];
+export const ALLOWED_FINDINGS: readonly AllowedFinding[] = [
+  {
+    file: 'scripts/build-pdf.ts',
+    rule: 'four-part-version',
+    match: '127.0.0.1',
+    reason: '產生 PDF 時在本機起的靜態服務只綁回送位址；不是版本號，也不是對外主機。',
+  },
+];
 
 /** 不掃描的檔案（完整相對路徑）。 */
 export const EXCLUDED_FILES: readonly string[] = [
@@ -76,9 +83,14 @@ export const BINARY_EXTENSIONS: readonly string[] = [
   '.woff2',
   '.ttf',
   '.otf',
-  '.pdf',
   '.zip',
 ];
+
+/**
+ * PDF 的副檔名。PDF 不算在上面的二進位清單：同步的檔案掃描對它只掃檔名，
+ * 內容（文字層、中繼資料、連結註記）由非同步的 `scanPdf` 另外掃。
+ */
+export const PDF_EXTENSION = '.pdf';
 
 const EMAIL_PATTERN = /([A-Za-z0-9._%+-]+)@((?:[A-Za-z0-9-]+\.)+([A-Za-z]{2,}))/g;
 

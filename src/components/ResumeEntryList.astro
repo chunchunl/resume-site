@@ -1,0 +1,35 @@
+---
+/**
+ * 求職頁的經歷或學歷列表：每筆一張，標題列是名稱與期間，下面是職稱（或課程）與內容。
+ * 列印時同一筆不會被分頁切斷。
+ */
+import type { ResumeEntry } from '../data/resume';
+
+interface Props {
+  /** 要列出的經歷或學歷，照傳入順序。 */
+  entries: ResumeEntry[];
+}
+
+const { entries } = Astro.props;
+---
+
+<div class="resume-entries">
+  {
+    entries.map((entry) => (
+      <article class="resume-entry">
+        <div class="resume-entry__head">
+          <h3 class="resume-entry__org">{entry.org}</h3>
+          <p class="resume-entry__period">{entry.period}</p>
+        </div>
+        <p class="resume-entry__role">{entry.role}</p>
+        {entry.points.length > 0 && (
+          <ul class="resume-entry__points">
+            {entry.points.map((point) => (
+              <li>{point}</li>
+            ))}
+          </ul>
+        )}
+      </article>
+    ))
+  }
+</div>
