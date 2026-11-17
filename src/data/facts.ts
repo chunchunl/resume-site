@@ -35,6 +35,8 @@ export interface Facts {
   rewardSystem: {
     /** 上線狀態；正式上線後改成 `launched`，各頁文字會一起改。 */
     status: RewardSystemStatus;
+    /** 每累積多少次運動可獲得一次獎勵。 */
+    milestoneVisits: number;
   };
   /** 個人 AI 知識平台（RAG）。 */
   rag: {
@@ -57,6 +59,7 @@ export const facts: Facts = {
   },
   rewardSystem: {
     status: 'testing',
+    milestoneVisits: 100,
   },
   rag: {
     indexedChunks: 3700,

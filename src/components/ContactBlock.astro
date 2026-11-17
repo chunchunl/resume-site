@@ -1,0 +1,43 @@
+---
+/**
+ * 首頁的聯絡區塊：兩個公開信箱各有用途標籤，另放 LinkedIn。
+ * 沒有位址或網址的項目在內容函式就已排除。
+ */
+import type { HomeContact } from '../data/home';
+
+interface Props {
+  /** 聯絡區塊內容。 */
+  contact: HomeContact;
+}
+
+const { contact } = Astro.props;
+---
+
+<section class="section section--contact" data-section="contact" aria-labelledby="contact-title">
+  <div class="container">
+    <h2 class="section__title" id="contact-title">{contact.title}</h2>
+    <p class="section__lead">{contact.description}</p>
+    <ul class="contact-list">
+      {
+        contact.emails.map((email) => (
+          <li class="contact-list__item">
+            <span class="contact-list__label">{email.label}</span>
+            <a class="contact-list__value" href={`mailto:${email.address}`}>
+              {email.address}
+            </a>
+          </li>
+        ))
+      }
+      {
+        contact.links.map((link) => (
+          <li class="contact-list__item">
+            <span class="contact-list__label">{link.label}</span>
+            <a class="contact-list__value" href={link.href} rel="noopener noreferrer">
+              {link.label} 個人頁面
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>

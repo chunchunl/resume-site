@@ -1,0 +1,45 @@
+---
+/**
+ * 首頁的代表作卡片：一句話、角色、技術、結果與案例頁連結。
+ * 整張卡只有標題一個連結，用 CSS 把可點範圍延伸到整張卡。
+ * 標題放在最前面，螢幕報讀器用標題跳到卡片時才讀得到後面的狀態；
+ * 所屬單位與狀態在畫面上用 CSS 排到標題上方。
+ */
+import type { HomeCase } from '../data/home';
+
+interface Props {
+  /** 卡片內容。 */
+  card: HomeCase;
+}
+
+const { card } = Astro.props;
+---
+
+<article class="case-card" data-section={card.section}>
+  <h3 class="case-card__title">
+    <a class="case-card__link" href={card.href}>{card.title}</a>
+  </h3>
+  <div class="case-card__head">
+    <p class="case-card__org">{card.org ?? '個人專案'}</p>
+    {card.status && <p class="status-badge">{card.status}</p>}
+  </div>
+  <p class="case-card__summary">{card.summary}</p>
+  <dl class="case-card__meta">
+    <div>
+      <dt>角色</dt>
+      <dd>{card.role}</dd>
+    </div>
+    <div>
+      <dt>技術</dt>
+      <dd>
+        <ul class="tag-list">
+          {card.tech.map((item) => <li class="tag">{item}</li>)}
+        </ul>
+      </dd>
+    </div>
+  </dl>
+  <ul class="case-card__results">
+    {card.results.map((result) => <li>{result}</li>)}
+  </ul>
+  <p class="case-card__more" aria-hidden="true">看完整案例 →</p>
+</article>

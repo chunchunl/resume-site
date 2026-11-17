@@ -1,0 +1,45 @@
+---
+/**
+ * 全站導覽：網站名稱與四個主要頁面。
+ * 手機寬度用純 CSS 換行排版，不做需要 JavaScript 的開合選單。
+ */
+import { site } from '../data/site';
+import { siteFullName } from '../lib/seo';
+
+interface Props {
+  /** 目前頁面的路徑，用來標出導覽裡的目前頁面。 */
+  currentPath: string;
+}
+
+/** 導覽項目，順序固定。 */
+const NAV_ITEMS = [
+  { label: '首頁', href: '/' },
+  { label: '案例', href: '/work/' },
+  { label: '接案服務', href: '/services/' },
+  { label: '求職履歷', href: '/resume/' },
+];
+
+const { currentPath } = Astro.props;
+
+/** 判斷導覽項目是不是目前頁面；首頁只在路徑剛好是 `/` 時算。 */
+const isCurrent = (href: string): boolean => (href === '/' ? currentPath === '/' : currentPath.startsWith(href));
+---
+
+<header class="site-header">
+  <div class="container site-header__inner">
+    <p class="site-header__brand">{siteFullName(site)}</p>
+    <nav class="site-nav" aria-label="主要導覽">
+      <ul class="site-nav__list">
+        {
+          NAV_ITEMS.map((item) => (
+            <li>
+              <a class="site-nav__link" href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+</header>

@@ -1,11 +1,97 @@
 ---
-/** 首頁。目前只有標題，內容在後續工作補上。 */
+/** 首頁：第一屏、代表作、其他作品、我怎麼工作、聯絡。 */
+import CaseCard from '../components/CaseCard.astro';
+import ContactBlock from '../components/ContactBlock.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { facts } from '../data/facts';
+import { buildHome } from '../data/home';
 import { site } from '../data/site';
+import { buildPersonJsonLd, buildWebSiteJsonLd, siteFullName } from '../lib/seo';
 
-const fullName = `${site.name} ${site.alternateName}`;
+const home = buildHome(facts, site);
+const fullName = siteFullName(site);
 ---
 
-<BaseLayout title={`${fullName}｜${site.jobTitle}`} description={`${fullName}，${site.jobTitle}。${site.tagline}`}>
-  <h1>{fullName}</h1>
+<BaseLayout
+  title={`${fullName}｜${site.jobTitle}`}
+  description={`${fullName}，${site.jobTitle}。${site.tagline}`}
+  jsonLd={[buildPersonJsonLd(site), buildWebSiteJsonLd(site)]}
+>
+  <section class="hero" data-section="hero" aria-labelledby="hero-title">
+    <div class="container">
+      <h1 class="hero__name" id="hero-title">
+        {home.hero.name} <span class="hero__alt">{home.hero.alternateName}</span>
+      </h1>
+      <p class="hero__title">{home.hero.jobTitle}</p>
+      <p class="hero__tagline">{home.hero.tagline}</p>
+      <p class="hero__intro">{home.hero.intro}</p>
+      <ul class="hero__actions">
+        {
+          home.hero.actions.map((action, index) => (
+            <li>
+              <a class:list={['button', index === 0 ? 'button--primary' : 'button--secondary']} href={action.href}>
+                {action.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      {
+        home.hero.links.length > 0 && (
+          <ul class="hero__links">
+            {home.hero.links.map((link) => (
+              <li>
+                <a href={link.href} rel="noopener noreferrer">
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </div>
+  </section>
+
+  <section class="section" data-section="featured-work" aria-labelledby="featured-title">
+    <div class="container">
+      <h2 class="section__title" id="featured-title">代表作</h2>
+      <div class="case-grid">
+        {home.cases.map((card) => <CaseCard card={card} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--muted" data-section="other-work" aria-labelledby="other-title">
+    <div class="container">
+      <h2 class="section__title" id="other-title">其他作品</h2>
+      <ul class="other-list">
+        {
+          home.otherWork.map((item) => (
+            <li class="other-list__item">
+              <h3 class="other-list__title">{item.title}</h3>
+              <p>{item.description}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" data-section="how-i-work" aria-labelledby="how-title">
+    <div class="container">
+      <h2 class="section__title" id="how-title">我怎麼工作</h2>
+      <ol class="principle-list">
+        {
+          home.howIWork.map((item) => (
+            <li class="principle-list__item">
+              <h3 class="principle-list__title">{item.title}</h3>
+              <p>{item.description}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <ContactBlock contact={home.contact} />
 </BaseLayout>

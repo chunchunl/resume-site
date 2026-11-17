@@ -1,13 +1,17 @@
 ---
 /**
- * 全站共用版面：輸出語系、標題、描述、canonical 與 Open Graph，並把內容包在 <main>。
+ * 全站共用版面：輸出語系、標題、描述、canonical、Open Graph 與 JSON-LD，
+ * 並放上導覽、頁尾與包住主要內容的 <main>。
  *
  * 為了讓回應標頭的 CSP 維持只允許同源：
- * - 這裡與所有元件都不寫 <script>、不用 style 屬性。
+ * - 這裡與所有元件都不寫 <script>（JSON-LD 除外）、不用 style 屬性。
  * - 樣式只從外部樣式檔載入。
  */
 import '../styles/global.css';
+import SiteFooter from '../components/SiteFooter.astro';
+import SiteHeader from '../components/SiteHeader.astro';
 import { site } from '../data/site';
+import { buildPageMeta, serializeJsonLd, type HtmlLang, type JsonLd } from '../lib/seo';
 
 interface Props {
   /** 頁面標題，全站每頁不可重複。 */
@@ -15,14 +19,15 @@ interface Props {
   /** 頁面描述。 */
   description: string;
   /** 頁面語系，預設中文。 */
-  lang?: 'zh-Hant-TW' | 'en';
+  lang?: HtmlLang;
   /** 設為 true 時不讓搜尋引擎收錄，也不輸出 canonical（例如 404 頁）。 */
   noindex?: boolean;
+  /** 這頁要輸出的 JSON-LD。 */
+  jsonLd?: JsonLd[];
 }
 
-const { title, description, lang = 'zh-Hant-TW', noindex = false } = Astro.props;
-const canonical = new URL(Astro.url.pathname, Astro.site ?? site.url).href;
-const ogLocale = lang === 'en' ? 'en_US' : 'zh_TW';
+const { title, description, lang = 'zh-Hant-TW', noindex = false, jsonLd = [] } = Astro.props;
+const meta = buildPageMeta(site, { title, description, path: Astro.url.pathname, lang, noindex });
 ---
 
 <!doctype html>
@@ -30,19 +35,24 @@ const ogLocale = lang === 'en' ? 'en_US' : 'zh_TW';
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{title}</title>
-    <meta name="description" content={description} />
-    {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonical} />}
+    <title>{meta.title}</title>
+    <meta name="description" content={meta.description} />
+    {meta.robots && <meta name="robots" content={meta.robots} />}
+    {meta.canonical && <link rel="canonical" href={meta.canonical} />}
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content={`${site.name} ${site.alternateName}`} />
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
-    {!noindex && <meta property="og:url" content={canonical} />}
-    <meta property="og:locale" content={ogLocale} />
+    <meta property="og:site_name" content={meta.ogSiteName} />
+    <meta property="og:title" content={meta.title} />
+    <meta property="og:description" content={meta.description} />
+    {meta.canonical && <meta property="og:url" content={meta.canonical} />}
+    <meta property="og:locale" content={meta.ogLocale} />
+    {jsonLd.map((data) => <script type="application/ld+json" set:html={serializeJsonLd(data)} />)}
   </head>
   <body>
-    <main>
+    <a class="skip-link" href="#main">跳到主要內容</a>
+    <SiteHeader currentPath={Astro.url.pathname} />
+    <main id="main">
       <slot />
     </main>
+    <SiteFooter />
   </body>
 </html>

@@ -1,0 +1,46 @@
+---
+/**
+ * 全站頁尾：公開信箱、LinkedIn、GitHub 與隱私說明。
+ * 值為 null 的信箱或連結不輸出。
+ */
+import { siteEmails, siteProfiles } from '../data/home';
+import { site } from '../data/site';
+import { siteFullName } from '../lib/seo';
+
+/** 公開信箱與用途；沒有位址的不列。 */
+const emails = siteEmails(site);
+
+/** 外部個人頁；沒有網址的不列，順序與首頁第一屏相同。 */
+const profiles = siteProfiles(site);
+---
+
+<footer class="site-footer">
+  <div class="container site-footer__inner">
+    <div class="site-footer__identity">
+      <p class="site-footer__name">{siteFullName(site)}</p>
+      <p>{site.jobTitle}</p>
+    </div>
+    <ul class="site-footer__list" aria-label="公開信箱">
+      {
+        emails.map((email) => (
+          <li>
+            <span class="site-footer__label">{email.label}</span>
+            <a href={`mailto:${email.address}`}>{email.address}</a>
+          </li>
+        ))
+      }
+    </ul>
+    <ul class="site-footer__list site-footer__list--inline" aria-label="其他連結">
+      {
+        profiles.map((link) => (
+          <li>
+            <a href={link.href} rel="noopener noreferrer">
+              {link.label}
+            </a>
+          </li>
+        ))
+      }
+      <li><a href="/privacy/">隱私說明</a></li>
+    </ul>
+  </div>
+</footer>

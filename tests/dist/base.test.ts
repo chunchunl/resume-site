@@ -1,24 +1,9 @@
-import { readdirSync, readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
 import * as cheerio from 'cheerio';
 import { describe, expect, it } from 'vitest';
 import { site } from '../../src/data/site';
+import { listDistFiles, listHtmlFiles, readDist } from './helpers';
 
-const distDir = fileURLToPath(new URL('../../dist', import.meta.url)).replaceAll('\\', '/').replace(/\/$/, '');
 const ONE_YEAR_IN_SECONDS = 31_536_000;
-
-/** 讀取 build 產物內的檔案。 */
-function readDist(relativePath: string): string {
-  return readFileSync(`${distDir}/${relativePath}`, 'utf8');
-}
-
-/** 列出 dist 內全部檔案（相對路徑，一律用斜線）。 */
-function listDistFiles(): string[] {
-  return readdirSync(distDir, { recursive: true, withFileTypes: true })
-    .filter((entry) => entry.isFile())
-    .map((entry) => `${entry.parentPath}/${entry.name}`.replaceAll('\\', '/'))
-    .map((path) => path.slice(distDir.length).replace(/^\/+/, ''));
-}
 
 /** 把 CSP 字串拆成「指令名稱 → 來源清單」。 */
 function parseCsp(value: string): Map<string, string[]> {
@@ -56,8 +41,6 @@ function isSameSitePath(url: string | undefined): boolean {
   return typeof url === 'string' && /^\/(?!\/)/.test(url);
 }
 
-const htmlFiles = (): string[] => listDistFiles().filter((file) => file.endsWith('.html'));
-
 describe('dist 基本檢查', () => {
   it('dist 首頁基本結構', () => {
     const $ = cheerio.load(readDist('index.html'));
@@ -88,9 +71,9 @@ describe('dist 基本檢查', () => {
   });
 
   it('dist 沒有行內 script 與行內樣式', () => {
-    expect(htmlFiles().length).toBeGreaterThan(0);
+    expect(listHtmlFiles().length).toBeGreaterThan(0);
 
-    for (const file of htmlFiles()) {
+    for (const file of listHtmlFiles()) {
       const $ = cheerio.load(readDist(file));
       const inlineScripts = $('script')
         .toArray()
@@ -111,7 +94,7 @@ describe('dist 基本檢查', () => {
   });
 
   it('dist 的 script、樣式與圖片都從本站載入', () => {
-    for (const file of htmlFiles()) {
+    for (const file of listHtmlFiles()) {
       const $ = cheerio.load(readDist(file));
       const resources = [
         ...$('script[src]').toArray().map((element) => $(element).attr('src')),
