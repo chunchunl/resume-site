@@ -1,6 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import { site, type Site } from '../data/site';
-import { buildPageMeta, buildPersonJsonLd, buildWebSiteJsonLd, serializeJsonLd } from './seo';
+import {
+  buildBreadcrumbJsonLd,
+  buildFaqPageJsonLd,
+  buildPageMeta,
+  buildPersonJsonLd,
+  buildWebSiteJsonLd,
+  serializeJsonLd,
+} from './seo';
 
 /** 兩個公開連結都有值的假身分資料；LinkedIn 用虛構網址。 */
 const fullSite: Site = {
@@ -135,5 +142,46 @@ describe('serializeJsonLd', () => {
 
     expect(output).not.toContain('<');
     expect(JSON.parse(output)).toEqual(data);
+  });
+});
+
+describe('buildFaqPageJsonLd', () => {
+  it('buildFaqPageJsonLd 問答逐字輸出', () => {
+    const faq = [
+      { question: '第一個問題？', answer: '第一個答案。' },
+      { question: '第二個問題？', answer: '第二個答案，含 <符號> 與 "引號"。' },
+    ];
+    const data = buildFaqPageJsonLd(faq);
+
+    expect(data['@context']).toBe('https://schema.org');
+    expect(data['@type']).toBe('FAQPage');
+    expect(data.mainEntity).toEqual(
+      faq.map((item) => ({
+        '@type': 'Question',
+        name: item.question,
+        acceptedAnswer: { '@type': 'Answer', text: item.answer },
+      })),
+    );
+  });
+});
+
+describe('buildBreadcrumbJsonLd', () => {
+  it('buildBreadcrumbJsonLd 順序正確', () => {
+    const data = buildBreadcrumbJsonLd(site, [
+      { name: '首頁', path: '/' },
+      { name: '案例', path: '/work/' },
+      { name: '某個案例', path: '/work/some-case/' },
+    ]);
+    const items = data.itemListElement as { position: number; name: string; item: string }[];
+
+    expect(data['@type']).toBe('BreadcrumbList');
+    expect(items.map((item) => item.position)).toEqual([1, 2, 3]);
+    expect(items.map((item) => item.name)).toEqual(['首頁', '案例', '某個案例']);
+    expect(items.map((item) => item.item)).toEqual([
+      'https://lin-yu-chun.com/',
+      'https://lin-yu-chun.com/work/',
+      'https://lin-yu-chun.com/work/some-case/',
+    ]);
+    for (const item of items) expect(item.item.startsWith('https://lin-yu-chun.com')).toBe(true);
   });
 });

@@ -1,0 +1,93 @@
+---
+/**
+ * 活動平台的分層架構圖（自製示意，只寫層級與技術名稱，不寫主機與版本）。
+ * 三種入口 → 前端 → API → 資料庫、Email、即時看板 → 雲端平台。
+ */
+const titleId = 'event-architecture-title';
+const descId = 'event-architecture-desc';
+const markerId = 'event-architecture-arrow';
+
+/** 一列三個方塊的橫向位置與寬度。 */
+const COLUMNS = [8, 128, 248];
+const COLUMN_WIDTH = 104;
+
+const ENTRIES = ['店舖前台', '總部後台', '手機驗票'];
+const SERVICES = [
+  { label: 'SQL Server', note: '資料庫' },
+  { label: 'Email 服務', note: '邀請與確認信' },
+  { label: 'Socket.IO', note: '即時看板' },
+];
+---
+
+<figure class="diagram">
+  <svg viewBox="0 0 360 452" role="img" aria-labelledby={titleId} aria-describedby={descId} xmlns="http://www.w3.org/2000/svg">
+    <title id={titleId}>活動報名與驗票平台的分層架構</title>
+    <desc id={descId}>
+      店舖前台、總部後台與手機驗票三種入口共用 React 與 TypeScript 前端，再呼叫 Node.js 與 Express API；API 連到 SQL Server、Email 服務與 Socket.IO 即時看板；整個服務部署在 Azure Web App。
+    </desc>
+    <defs>
+      <marker id={markerId} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+        <path class="diagram__arrowhead" d="M0 0 L10 5 L0 10 Z"></path>
+      </marker>
+    </defs>
+
+    <text class="diagram__caption" x="8" y="14">入口</text>
+    {
+      ENTRIES.map((entry, index) => (
+        <g>
+          <rect class="diagram__box" x={COLUMNS[index]} y="24" width={COLUMN_WIDTH} height="48" rx="10"></rect>
+          <text class="diagram__label" x={(COLUMNS[index] ?? 0) + COLUMN_WIDTH / 2} y="54" text-anchor="middle">
+            {entry}
+          </text>
+          <line
+            class="diagram__line"
+            x1={(COLUMNS[index] ?? 0) + COLUMN_WIDTH / 2}
+            y1="72"
+            x2={(COLUMNS[index] ?? 0) + COLUMN_WIDTH / 2}
+            y2="102"
+            marker-end={`url(#${markerId})`}
+          ></line>
+        </g>
+      ))
+    }
+
+    <rect class="diagram__box" x="8" y="104" width="344" height="52" rx="10"></rect>
+    <text class="diagram__label" x="180" y="128" text-anchor="middle">前端</text>
+    <text class="diagram__note" x="180" y="146" text-anchor="middle">React・TypeScript・MUI</text>
+    <line class="diagram__line" x1="180" y1="156" x2="180" y2="182" marker-end={`url(#${markerId})`}></line>
+
+    <rect class="diagram__box" x="8" y="184" width="344" height="52" rx="10"></rect>
+    <text class="diagram__label" x="180" y="208" text-anchor="middle">API</text>
+    <text class="diagram__note" x="180" y="226" text-anchor="middle">Node.js・Express</text>
+
+    {
+      SERVICES.map((service, index) => (
+        <g>
+          <line
+            class="diagram__line"
+            x1="180"
+            y1="236"
+            x2={(COLUMNS[index] ?? 0) + COLUMN_WIDTH / 2}
+            y2="270"
+            marker-end={`url(#${markerId})`}
+          ></line>
+          <rect class="diagram__box" x={COLUMNS[index]} y="272" width={COLUMN_WIDTH} height="60" rx="10"></rect>
+          <text class="diagram__label" x={(COLUMNS[index] ?? 0) + COLUMN_WIDTH / 2} y="298" text-anchor="middle">
+            {service.label}
+          </text>
+          <text class="diagram__note" x={(COLUMNS[index] ?? 0) + COLUMN_WIDTH / 2} y="318" text-anchor="middle">
+            {service.note}
+          </text>
+        </g>
+      ))
+    }
+
+    <rect class="diagram__box diagram__box--soft" x="8" y="364" width="344" height="72" rx="10"></rect>
+    <text class="diagram__label" x="180" y="392" text-anchor="middle">雲端平台：Azure Web App</text>
+    <text class="diagram__note" x="180" y="414" text-anchor="middle">前端、API 與看板由同一個服務提供</text>
+    <text class="diagram__note" x="180" y="430" text-anchor="middle">Jenkins 先跑測試，通過才部署</text>
+  </svg>
+  <figcaption>
+    圖：三種入口共用同一套前端與 API；API 連到資料庫、Email 與即時看板，整個服務部署在雲端平台。
+  </figcaption>
+</figure>

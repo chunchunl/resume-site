@@ -1,0 +1,87 @@
+---
+/**
+ * 案例頁模板：一句話摘要 → 摘要表 → 問句式段落與圖 → 結果 → 常見問題 → AI 協作說明。
+ * 頁面上的問答與 FAQPage JSON-LD 讀同一份案例內容。
+ * 段落與區塊標題目前只有中文；英文版（第二批）再改成依語系取字。
+ */
+import type { GetStaticPaths } from 'astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import CaseSummaryTable from '../../components/CaseSummaryTable.astro';
+import EventArchitectureDiagram from '../../components/diagrams/EventArchitectureDiagram.astro';
+import EventFlowDiagram from '../../components/diagrams/EventFlowDiagram.astro';
+import FaqSection from '../../components/FaqSection.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCases } from '../../data/cases';
+import type { CaseContent, DiagramId } from '../../data/cases/types';
+import { facts } from '../../data/facts';
+import { site } from '../../data/site';
+import { buildBreadcrumbJsonLd, buildFaqPageJsonLd, siteFullName, type BreadcrumbItem } from '../../lib/seo';
+
+/** 每個案例產生一頁。 */
+export const getStaticPaths = (() =>
+  getCases('zh-TW', facts).map((content) => ({ params: { slug: content.slug }, props: { content } }))) satisfies GetStaticPaths;
+
+interface Props {
+  /** 這一頁的案例內容。 */
+  content: CaseContent;
+}
+
+/** 圖代號對應的元件。 */
+const DIAGRAMS: Record<DiagramId, typeof EventFlowDiagram> = {
+  'event-flow': EventFlowDiagram,
+  'event-architecture': EventArchitectureDiagram,
+};
+
+const { content } = Astro.props;
+const breadcrumb: BreadcrumbItem[] = [
+  { name: '首頁', path: '/' },
+  { name: '案例', path: '/work/' },
+  { name: content.title, path: `/work/${content.slug}/` },
+];
+---
+
+<BaseLayout
+  title={`${content.title}｜案例｜${siteFullName(site)}`}
+  description={content.summary}
+  jsonLd={[buildFaqPageJsonLd(content.faq), buildBreadcrumbJsonLd(site, breadcrumb)]}
+>
+  <article class="case">
+    <div class="container case__inner">
+      <Breadcrumb items={breadcrumb} />
+      <div class="case__intro">
+        <h1 class="case__title">{content.title}</h1>
+        <p class="case__summary">{content.summary}</p>
+      </div>
+      <CaseSummaryTable content={content} />
+
+      {
+        content.sections.map((section, index) => {
+          const Diagram = section.diagram ? DIAGRAMS[section.diagram] : undefined;
+          return (
+            <section class="case-section" aria-labelledby={`section-${index}`}>
+              <h2 id={`section-${index}`}>{section.heading}</h2>
+              {section.paragraphs.map((paragraph) => (
+                <p>{paragraph}</p>
+              ))}
+              {Diagram && <Diagram />}
+            </section>
+          );
+        })
+      }
+
+      <section class="case-section" data-section="results" aria-labelledby="results-title">
+        <h2 id="results-title">結果是什麼？</h2>
+        <ul class="case__results">
+          {content.results.map((result) => <li>{result}</li>)}
+        </ul>
+      </section>
+
+      <FaqSection faq={content.faq} />
+
+      <aside class="case__ai-note" data-section="ai-note" aria-labelledby="ai-note-title">
+        <h2 id="ai-note-title">我怎麼和 AI 協作？</h2>
+        <p>{content.aiNote}</p>
+      </aside>
+    </div>
+  </article>
+</BaseLayout>

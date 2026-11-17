@@ -109,3 +109,49 @@ export function buildPageMeta(site: Site, page: PageMetaInput): PageMeta {
 export function serializeJsonLd(data: unknown): string {
   return JSON.stringify(data).replaceAll('<', String.raw`\u003c`);
 }
+
+/** 一組問答。 */
+export interface FaqItem {
+  /** 問題。 */
+  question: string;
+  /** 答案，單段純文字。 */
+  answer: string;
+}
+
+/** 麵包屑的一層。 */
+export interface BreadcrumbItem {
+  /** 顯示名稱。 */
+  name: string;
+  /** 站內路徑，以斜線開頭。 */
+  path: string;
+}
+
+/**
+ * 產生 `FAQPage` JSON-LD。問答字串原樣輸出，
+ * 頁面上的可見文字要讀同一份資料，兩邊才會逐字相同。
+ */
+export function buildFaqPageJsonLd(faq: FaqItem[]): JsonLd {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faq.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: { '@type': 'Answer', text: item.answer },
+    })),
+  };
+}
+
+/** 產生 `BreadcrumbList` JSON-LD；每一層的網址都轉成正式網址。 */
+export function buildBreadcrumbJsonLd(site: Site, items: BreadcrumbItem[]): JsonLd {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: items.map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: item.name,
+      item: absoluteUrl(site, item.path),
+    })),
+  };
+}

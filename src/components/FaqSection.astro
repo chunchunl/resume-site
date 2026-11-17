@@ -1,0 +1,27 @@
+---
+/**
+ * 常見問題區塊。問答文字和 FAQPage JSON-LD 讀同一份資料，所以兩邊逐字相同。
+ */
+import type { CaseFaq } from '../data/cases/types';
+
+interface Props {
+  /** 問答清單。 */
+  faq: CaseFaq[];
+}
+
+const { faq } = Astro.props;
+---
+
+<section class="case-section faq" data-section="faq" aria-labelledby="faq-title">
+  <h2 id="faq-title">常見問題</h2>
+  <dl class="faq__list">
+    {
+      faq.map((item) => (
+        <div class="faq__item">
+          <dt class="faq__question">{item.question}</dt>
+          <dd class="faq__answer">{item.answer}</dd>
+        </div>
+      ))
+    }
+  </dl>
+</section>

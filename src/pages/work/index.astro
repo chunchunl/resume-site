@@ -1,0 +1,34 @@
+---
+/** 案例列表頁：依順序列出每個案例的標題、一句話與連結。 */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCases } from '../../data/cases';
+import { facts } from '../../data/facts';
+import { site } from '../../data/site';
+import { siteFullName } from '../../lib/seo';
+
+const cases = getCases('zh-TW', facts);
+---
+
+<BaseLayout title={`案例｜${siteFullName(site)}`} description={`${siteFullName(site)} 的作品案例：問題、我負責的範圍、驗證方式與結果。`}>
+  <section class="section section--first" aria-labelledby="work-title">
+    <div class="container">
+      <h1 class="page-title" id="work-title">案例</h1>
+      <p class="section__lead">每個案例都寫清楚要解決的問題、我負責的範圍、怎麼驗證，以及結果。</p>
+      <ul class="work-list">
+        {
+          cases.map((content) => (
+            <li class="work-list__item">
+              <h2 class="work-list__title">
+                <a href={`/work/${content.slug}/`}>{content.title}</a>
+              </h2>
+              <p class="work-list__summary">{content.summary}</p>
+              <p class="work-list__meta">
+                {content.role}｜{content.period}
+              </p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+</BaseLayout>

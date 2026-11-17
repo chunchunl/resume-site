@@ -226,7 +226,9 @@ describe('dist 全站身分', () => {
 
       expect(navLinks, `${file} 的導覽連結`).toEqual(NAV_LINKS);
       expect($('body > footer'), `${file} 缺頁尾`).toHaveLength(1);
-      expect($('main header, main footer, main nav'), `${file} 的導覽或頁尾在 main 裡`).toHaveLength(0);
+      expect($('main header, main footer'), `${file} 的頁首或頁尾在 main 裡`).toHaveLength(0);
+      // 案例頁的麵包屑是頁面內的 nav，只豁免這一種。
+      expect($('main nav').not('nav.breadcrumb[aria-label="麵包屑"]'), `${file} 的 main 裡有其他 nav`).toHaveLength(0);
       expect($('body > main'), `${file} 的 main`).toHaveLength(1);
     }
   });

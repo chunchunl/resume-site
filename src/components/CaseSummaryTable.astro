@@ -1,0 +1,37 @@
+---
+/** 案例摘要表：期間、角色、技術與成熟度。 */
+import type { CaseContent } from '../data/cases/types';
+
+interface Props {
+  /** 案例內容。 */
+  content: CaseContent;
+}
+
+const { content } = Astro.props;
+---
+
+<table class="summary-table" data-section="case-summary">
+  <caption class="visually-hidden">專案摘要</caption>
+  <tbody>
+    <tr>
+      <th scope="row">期間</th>
+      <td>{content.period}</td>
+    </tr>
+    <tr>
+      <th scope="row">角色</th>
+      <td>{content.role}</td>
+    </tr>
+    <tr>
+      <th scope="row">技術</th>
+      <td>
+        <ul class="tag-list">
+          {content.tech.map((item) => <li class="tag">{item}</li>)}
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <th scope="row">成熟度</th>
+      <td>{content.maturity}</td>
+    </tr>
+  </tbody>
+</table>

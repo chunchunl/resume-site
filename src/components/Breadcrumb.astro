@@ -1,0 +1,31 @@
+---
+/**
+ * 麵包屑：顯示目前頁面在網站裡的位置，最後一層是目前頁面（不加連結）。
+ * BreadcrumbList JSON-LD 由頁面用同一份資料產生。
+ */
+import type { BreadcrumbItem } from '../lib/seo';
+
+interface Props {
+  /** 由首頁到目前頁面的每一層。 */
+  items: BreadcrumbItem[];
+}
+
+const { items } = Astro.props;
+const lastIndex = items.length - 1;
+---
+
+<nav class="breadcrumb" aria-label="麵包屑">
+  <ol class="breadcrumb__list">
+    {
+      items.map((item, index) => (
+        <li class="breadcrumb__item">
+          {index === lastIndex ? (
+            <span aria-current="page">{item.name}</span>
+          ) : (
+            <a href={item.path}>{item.name}</a>
+          )}
+        </li>
+      ))
+    }
+  </ol>
+</nav>

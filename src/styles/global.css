@@ -556,6 +556,273 @@ a:hover {
   margin-right: var(--space-2);
 }
 
+/* ---------- 共用 ---------- */
+
+/* 只給螢幕報讀器讀，畫面上不顯示。 */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.page-title {
+  font-size: var(--text-hero);
+}
+
+.section--first {
+  border-top: 0;
+}
+
+/* ---------- 案例列表 ---------- */
+
+.work-list {
+  display: grid;
+  gap: var(--space-5);
+  margin-top: var(--space-6);
+}
+
+.work-list__item {
+  padding: var(--space-5);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+}
+
+.work-list__title {
+  font-size: var(--text-xl);
+}
+
+.work-list__summary {
+  margin-top: var(--space-2);
+  color: var(--color-text-muted);
+}
+
+.work-list__meta {
+  margin-top: var(--space-3);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+/* ---------- 麵包屑 ---------- */
+
+.breadcrumb__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-2);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.breadcrumb__item:not(:last-child)::after {
+  margin-left: var(--space-2);
+  /* 分隔符號只給眼睛看，報讀器不唸（替代文字為空）。 */
+  content: '/';
+  content: '/' / '';
+  color: var(--color-border);
+}
+
+/* ---------- 案例頁 ---------- */
+
+.case {
+  padding-block: var(--space-5) var(--space-7);
+}
+
+.case__inner {
+  max-width: 48rem;
+}
+
+.case__intro {
+  margin-top: var(--space-5);
+}
+
+.case__title {
+  font-size: var(--text-hero);
+}
+
+.case__summary {
+  margin-top: var(--space-4);
+  color: var(--color-text-muted);
+  font-size: var(--text-lg);
+}
+
+.summary-table {
+  width: 100%;
+  margin-top: var(--space-6);
+  font-size: var(--text-sm);
+  border-spacing: 0;
+  border-collapse: separate;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.summary-table th,
+.summary-table td {
+  padding: var(--space-3) var(--space-4);
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.summary-table tr:last-child th,
+.summary-table tr:last-child td {
+  border-bottom: 0;
+}
+
+.summary-table th {
+  width: 5.5rem;
+  color: var(--color-text-muted);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.case-section {
+  margin-top: var(--space-7);
+}
+
+.case-section h2 {
+  margin-bottom: var(--space-4);
+  font-size: var(--text-2xl);
+}
+
+.case-section p + p {
+  margin-top: var(--space-4);
+}
+
+.case__results {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.case__results li {
+  position: relative;
+  padding-left: var(--space-5);
+}
+
+.case__results li::before {
+  position: absolute;
+  top: 0.7em;
+  left: var(--space-1);
+  width: 0.5rem;
+  height: 0.5rem;
+  content: '';
+  background: var(--color-accent);
+  border-radius: 50%;
+}
+
+.faq__list {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.faq__item {
+  padding: var(--space-4) var(--space-5);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.faq__question {
+  font-weight: 700;
+}
+
+.faq__answer {
+  margin-top: var(--space-2);
+  color: var(--color-text-muted);
+}
+
+.case__ai-note {
+  margin-top: var(--space-7);
+  padding: var(--space-5);
+  background: var(--color-accent-soft);
+  border-radius: var(--radius-md);
+}
+
+.case__ai-note h2 {
+  margin-bottom: var(--space-2);
+  font-size: var(--text-lg);
+}
+
+/* ---------- 案例圖 ---------- */
+
+.diagram {
+  margin: var(--space-6) 0 0;
+  padding: var(--space-3);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.diagram svg {
+  display: block;
+  width: 100%;
+  max-width: 28rem;
+  height: auto;
+  margin-inline: auto;
+}
+
+.diagram figcaption {
+  margin-top: var(--space-3);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.diagram__box {
+  fill: var(--color-surface);
+  stroke: var(--color-accent);
+  stroke-width: 1.5;
+}
+
+.diagram__box--soft {
+  fill: var(--color-accent-soft);
+  stroke: none;
+}
+
+.diagram__label {
+  fill: var(--color-text);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.diagram__note {
+  fill: var(--color-text-muted);
+  font-size: 14px;
+}
+
+.diagram__caption {
+  fill: var(--color-text-muted);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.diagram__step {
+  fill: var(--color-accent);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.diagram__line {
+  fill: none;
+  stroke: var(--color-accent);
+  stroke-width: 1.5;
+}
+
+.diagram__line--dashed {
+  stroke: var(--color-text-muted);
+  stroke-dasharray: 4 4;
+}
+
+.diagram__arrowhead {
+  fill: var(--color-accent);
+}
+
 /* ---------- 平板以上 ---------- */
 
 @media (min-width: 48rem) {
@@ -577,6 +844,10 @@ a:hover {
 
   .principle-list {
     grid-template-columns: repeat(3, 1fr);
+  }
+
+  .diagram {
+    padding: var(--space-5);
   }
 
   .principle-list__item {

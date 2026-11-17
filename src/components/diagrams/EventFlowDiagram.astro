@@ -1,0 +1,81 @@
+---
+/**
+ * 活動平台的使用流程圖（自製示意，不描摹真實畫面）。
+ * 主線：店舖報名 → 確認信與電子票券 → 現場掃碼 → 即時看板；右側是總部後台管理。
+ * 顏色全部來自設計變數（透過 class），不用 style 屬性。
+ */
+const titleId = 'event-flow-title';
+const descId = 'event-flow-desc';
+const markerId = 'event-flow-arrow';
+
+/** 主線的四個步驟與各自的縱向位置。 */
+const STEPS = [
+  { label: '店舖報名', note: '專屬入口報名、修改、取消', y: 16 },
+  { label: '確認信與電子票券', note: 'Email 寄出 QR Code 票券', y: 120 },
+  { label: '現場掃碼驗票', note: '後端核對活動、訂單與票券', y: 224 },
+  { label: '即時入場看板', note: '每次驗票成功就更新', y: 328 },
+];
+const STEP_HEIGHT = 72;
+const ADMIN_ITEMS = ['活動', '座位', '兌換券', '帳款', '通知', '名單匯出'];
+---
+
+<figure class="diagram">
+  <svg viewBox="0 0 360 416" role="img" aria-labelledby={titleId} aria-describedby={descId} xmlns="http://www.w3.org/2000/svg">
+    <title id={titleId}>活動報名與驗票的使用流程</title>
+    <desc id={descId}>
+      店舖報名後收到確認信與電子票券，活動當天工作人員掃碼驗票，結果即時更新到入場看板；總部在後台管理活動、座位、兌換券、帳款、通知與名單匯出。
+    </desc>
+    <defs>
+      <marker id={markerId} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+        <path class="diagram__arrowhead" d="M0 0 L10 5 L0 10 Z"></path>
+      </marker>
+    </defs>
+
+    {
+      STEPS.map((step, index) => (
+        <g>
+          <rect class="diagram__box" x="8" y={step.y} width="220" height={STEP_HEIGHT} rx="10"></rect>
+          <text class="diagram__step" x="28" y={step.y + 30}>
+            {index + 1}
+          </text>
+          <text class="diagram__label" x="48" y={step.y + 30}>
+            {step.label}
+          </text>
+          <text class="diagram__note" x="48" y={step.y + 54}>
+            {step.note}
+          </text>
+          {index < STEPS.length - 1 && (
+            <line
+              class="diagram__line"
+              x1="118"
+              y1={step.y + STEP_HEIGHT}
+              x2="118"
+              y2={step.y + 104 - 2}
+              marker-end={`url(#${markerId})`}
+            ></line>
+          )}
+          <line
+            class="diagram__line diagram__line--dashed"
+            x1="228"
+            y1={step.y + STEP_HEIGHT / 2}
+            x2="252"
+            y2={step.y + STEP_HEIGHT / 2}
+          ></line>
+        </g>
+      ))
+    }
+
+    <rect class="diagram__box diagram__box--soft" x="252" y="16" width="100" height="384" rx="10"></rect>
+    <text class="diagram__label" x="302" y="52" text-anchor="middle">總部後台</text>
+    {
+      ADMIN_ITEMS.map((item, index) => (
+        <text class="diagram__note" x="302" y={100 + index * 48} text-anchor="middle">
+          {item}
+        </text>
+      ))
+    }
+  </svg>
+  <figcaption>
+    圖：店舖報名、收到票券、現場掃碼到即時看板是主線；總部後台管理活動、座位、兌換券、帳款與通知。
+  </figcaption>
+</figure>
