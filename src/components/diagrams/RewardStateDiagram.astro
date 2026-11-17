@@ -1,7 +1,8 @@
 ---
 /**
  * 會員運動里程碑獎勵系統的狀態圖（概念層級的自製示意，不描摹真實畫面）。
- * 只畫會員與店舖看得懂的六個階段與轉店；不寫內部狀態代碼、門檻天數、截止日規則與資料表名稱。
+ * 只畫會員與店舖看得懂的六個階段與轉店；訂購通常早於滿百，所以排在前面。
+ * 不寫內部狀態代碼、門檻天數、截止日規則與資料表名稱。
  * 顏色全部來自設計變數（透過 class），不用 style 屬性。
  */
 const titleId = 'reward-states-title';
@@ -12,17 +13,17 @@ const markerId = 'reward-states-arrow';
 const STATES = [
   { label: '累積中', note: '會員看得到自己的進度' },
   { label: '可登記尺寸', note: '快達成時提醒登記尺寸' },
-  { label: '已滿百', note: '達成里程碑，可以領取' },
   { label: '已訂購', note: '店舖依名單訂購' },
   { label: '已到貨', note: 'T 恤送到店舖' },
-  { label: '已領取', note: '店舖人員標記領取' },
+  { label: '已滿百', note: '達成里程碑' },
+  { label: '已領取', note: '滿百且到店後標記領取' },
 ];
 const TOP = 16;
 const STATE_HEIGHT = 56;
 const STATE_PITCH = 80;
 const stateY = (index: number): number => TOP + index * STATE_PITCH;
 
-/** 轉店時由新店舖接手的階段（還沒領取）：從「可登記尺寸」到「已到貨」。 */
+/** 轉店時由新店舖接手的階段（還沒領取）：從「可登記尺寸」到「已滿百」。 */
 const TRANSFER_FROM = 1;
 const TRANSFER_TO = 4;
 const transferTop = stateY(TRANSFER_FROM);
@@ -37,7 +38,7 @@ const viewHeight = captionY + 16;
   <svg viewBox={`0 0 360 ${viewHeight}`} role="img" aria-labelledby={titleId} aria-describedby={descId} xmlns="http://www.w3.org/2000/svg">
     <title id={titleId}>獎勵紀錄的狀態變化</title>
     <desc id={descId}>
-      會員累積運動次數，快達成里程碑時可以登記尺寸；達成後可以領取，店舖訂購、到貨後標記已領取。會員轉店時，新店舖會接手還沒領取的獎勵。每達成一次里程碑，就建立一筆新紀錄。
+      會員累積運動次數，快達成里程碑時可以登記尺寸，店舖依名單訂購、到貨；會員達成里程碑且衣服已到店後，店舖標記已領取。會員轉店時，新店舖會接手還沒領取的獎勵。每達成一次里程碑，就建立一筆新紀錄。
     </desc>
     <defs>
       <marker id={markerId} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
@@ -101,6 +102,6 @@ const viewHeight = captionY + 16;
     <text class="diagram__caption" x="8" y={captionY}>每達成一次里程碑，就建立一筆新紀錄</text>
   </svg>
   <figcaption>
-    圖：一筆獎勵紀錄從累積中、登記尺寸、達成、訂購、到貨到領取；會員轉店時，新店舖會接手還沒領取的獎勵。
+    圖：一筆獎勵紀錄從累積中、登記尺寸、訂購、到貨、達成到領取，滿百與到貨的先後不一定，兩者都完成才能領取；會員轉店時，新店舖會接手還沒領取的獎勵。
   </figcaption>
 </figure>
