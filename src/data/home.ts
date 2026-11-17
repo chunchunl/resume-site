@@ -196,7 +196,7 @@ export function buildHome(facts: Facts, site: Site): HomeContent {
         title: '個人 AI 知識平台（RAG）',
         href: '/work/personal-rag-knowledge-platform/',
         summary: '自己維護的知識問答助理。我從「AI 回答過時」一路追到資料同步與存取控制問題，並把它們修好。',
-        role: '個人專案（問題定義、方案取捨、驗收）',
+        role: '獨立負責問題定義、方案取捨與驗收',
         tech: ['Cloudflare Workers AI', 'Vectorize', 'D1', 'R2', 'LINE Messaging API', 'Cloudflare Access'],
         results: [
           `追出同步管線靜默失敗的原因，重建約 ${formatNumber(rag.indexedChunks)} 個索引段落並補上日期資訊`,

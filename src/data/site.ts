@@ -43,7 +43,7 @@ export const site: Site = {
   location: '新北市',
   links: {
     github: 'https://github.com/chunchunl',
-    linkedin: null,
+    linkedin: 'https://www.linkedin.com/in/%E6%98%B1%E5%9D%87-%E6%9E%97-a2a820303/',
   },
   contactEmails: {
     work: 'work@lin-yu-chun.com',
