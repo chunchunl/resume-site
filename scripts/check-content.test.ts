@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { checkRequiredFields, findPlaceholders } from './check-content';
+import type { ServiceItem } from '../src/data/services';
+import { checkRequiredFields, checkServicePrices, findPlaceholders } from './check-content';
 
 const completeSite = {
   name: '測試姓名',
@@ -55,5 +56,24 @@ describe('check-content（審查後補強）', () => {
     const html = '<p>[AI] 知識平台 [X] [A-Z] items[N] [HTTP 200] TODOS MASTODON</p>';
 
     expect(findPlaceholders(html, 'dist/a.html')).toEqual([]);
+  });
+});
+
+/** 產生一項假服務。 */
+function fakeService(id: string, priceFrom: number | null, priceUnit: string | null = null): ServiceItem {
+  return { id, name: '假服務', audience: '測試用', includes: ['一項'], excludes: ['一項'], priceFrom, priceUnit, quoteRequired: false };
+}
+
+describe('checkServicePrices', () => {
+  it('checkServicePrices 起價未填會失敗', () => {
+    const result = checkServicePrices([fakeService('aeo-audit', 8000), fakeService('figma-to-react', null, '每頁')]);
+
+    expect(result).toEqual({ ok: false, missing: ['figma-to-react.priceFrom'] });
+  });
+
+  it('checkServicePrices 起價都填了就通過，priceUnit 可以是 null', () => {
+    const result = checkServicePrices([fakeService('aeo-audit', 8000), fakeService('custom-system', 100000)]);
+
+    expect(result).toEqual({ ok: true, missing: [] });
   });
 });

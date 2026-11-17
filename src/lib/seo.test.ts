@@ -5,9 +5,13 @@ import {
   buildFaqPageJsonLd,
   buildPageMeta,
   buildPersonJsonLd,
+  buildServiceJsonLd,
   buildWebSiteJsonLd,
+  personId,
   serializeJsonLd,
+  siteFullName,
 } from './seo';
+import type { ServiceItem } from '../data/services';
 
 /** 兩個公開連結都有值的假身分資料；LinkedIn 用虛構網址。 */
 const fullSite: Site = {
@@ -183,5 +187,39 @@ describe('buildBreadcrumbJsonLd', () => {
       'https://lin-yu-chun.com/work/some-case/',
     ]);
     for (const item of items) expect(item.item.startsWith('https://lin-yu-chun.com')).toBe(true);
+  });
+});
+
+/** 產生一項價格欄位可自訂的假服務。 */
+function fakeService(price: Pick<ServiceItem, 'priceFrom' | 'priceUnit'>): ServiceItem {
+  return { id: 'fake-service', name: '假服務', audience: '測試用', includes: ['一項'], excludes: ['一項'], quoteRequired: false, ...price };
+}
+
+describe('buildServiceJsonLd', () => {
+  it('buildServiceJsonLd 價格與提供者', () => {
+    const perPage = buildServiceJsonLd(site, fakeService({ priceFrom: 5000, priceUnit: '每頁' }));
+
+    expect(perPage['@type']).toBe('Service');
+    expect(perPage.name).toBe('假服務');
+    expect(perPage.description).toBe('一項');
+    expect(perPage.audience).toEqual({ '@type': 'Audience', audienceType: '測試用' });
+    expect(perPage.url).toBe('https://lin-yu-chun.com/services/#service-fake-service');
+    expect(perPage.provider).toEqual({ '@type': 'Person', '@id': personId(site), name: siteFullName(site) });
+    expect(perPage.offers).toEqual({
+      '@type': 'Offer',
+      priceSpecification: { '@type': 'UnitPriceSpecification', minPrice: 5000, priceCurrency: 'TWD', unitText: '每頁' },
+    });
+
+    const flat = buildServiceJsonLd(site, fakeService({ priceFrom: 8000, priceUnit: null }));
+    expect(flat.offers).toEqual({
+      '@type': 'Offer',
+      priceSpecification: { '@type': 'PriceSpecification', minPrice: 8000, priceCurrency: 'TWD' },
+    });
+  });
+
+  it('buildServiceJsonLd 沒有價格不輸出 offers', () => {
+    const result = buildServiceJsonLd(site, fakeService({ priceFrom: null, priceUnit: null }));
+
+    expect(Object.keys(result)).not.toContain('offers');
   });
 });

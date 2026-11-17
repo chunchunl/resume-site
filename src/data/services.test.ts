@@ -1,0 +1,122 @@
+import { describe, expect, it } from 'vitest';
+import { getCases } from './cases';
+import { collectStrings, writingRuleViolations } from './cases/test-utils';
+import { SLUG_PATTERN } from './cases/types';
+import { facts } from './facts';
+import { buildServices, formatServicePrice, type ServiceItem } from './services';
+import { site, type Site } from './site';
+
+/** 接案信箱還沒定案的假身分資料。 */
+const siteWithoutWorkEmail: Site = { ...site, contactEmails: { ...site.contactEmails, work: null } };
+
+/** 產生一項價格欄位可自訂的假服務。 */
+function fakeService(price: Pick<ServiceItem, 'priceFrom' | 'priceUnit' | 'quoteRequired'>): ServiceItem {
+  return { id: 'fake-service', name: '假服務', audience: '測試用', includes: ['一項'], excludes: ['一項'], ...price };
+}
+
+describe('buildServices', () => {
+  it('buildServices 四項服務順序', () => {
+    const { services } = buildServices(site);
+
+    expect(services.map((service) => service.id)).toEqual(['aeo-audit', 'brand-site-aeo', 'figma-to-react', 'custom-system']);
+    for (const service of services) expect(service.id).toMatch(SLUG_PATTERN);
+  });
+
+  it('buildServices 每項欄位齊全', () => {
+    for (const service of buildServices(site).services) {
+      expect(service.name.trim(), service.id).not.toBe('');
+      expect(service.audience.trim(), service.id).not.toBe('');
+      expect(service.includes.length, service.id).toBeGreaterThanOrEqual(1);
+      expect(service.excludes.length, service.id).toBeGreaterThanOrEqual(1);
+    }
+  });
+
+  it('buildServices 起價', () => {
+    const { services } = buildServices(site);
+
+    expect(services.map((service) => service.priceFrom)).toEqual([8000, 30000, 5000, 100000]);
+    expect(services.filter((service) => service.priceUnit !== null).map((service) => [service.id, service.priceUnit])).toEqual([
+      ['figma-to-react', '每頁'],
+    ]);
+    expect(services.filter((service) => service.quoteRequired).map((service) => service.id)).toEqual(['custom-system']);
+  });
+
+  it('buildServices 合作規則三條', () => {
+    const content = buildServices(site);
+    const allText = collectStrings(content).join('\n');
+
+    expect(content.rules).toHaveLength(3);
+    expect(content.rules.join('\n')).toContain('50／50');
+    expect(content.rules.join('\n')).toContain('30／40／30');
+    for (const banned of ['一次只接', '同業', '時薪', '二代健保', '稅', '維護另計']) {
+      expect(allText, banned).not.toContain(banned);
+    }
+  });
+
+  it('buildServices 不把 Curves 寫成客戶', () => {
+    const content = buildServices(site);
+    const allText = collectStrings(content).join('\n');
+
+    expect(content.faq.map((item) => item.answer)).toContain('頁面上的案例是我在 Curves 的工作成果與個人專案，不是接案客戶的專案。');
+    expect(content.relatedCases.map((item) => [item.href, item.context])).toEqual([
+      ['/work/event-ticketing-platform/', '在 Curves 的工作成果'],
+      ['/work/member-milestone-rewards/', '在 Curves 的工作成果'],
+      ['/work/personal-rag-knowledge-platform/', '個人專案'],
+    ]);
+    for (const banned of ['客戶：Curves', 'Curves 委託', '為 Curves 接案']) {
+      expect(allText, banned).not.toContain(banned);
+    }
+  });
+
+  it('buildServices 相關案例的標題與案例頁相同', () => {
+    const cases = getCases('zh-TW', facts);
+    const titleBySlug = new Map(cases.map((item) => [`/work/${item.slug}/`, item.title]));
+
+    for (const item of buildServices(site).relatedCases) {
+      expect(item.title, item.href).toBe(titleBySlug.get(item.href));
+    }
+  });
+
+  it('buildServices 常見問題', () => {
+    const { faq } = buildServices(site);
+
+    expect(faq.length).toBeGreaterThanOrEqual(3);
+    for (const item of faq) {
+      expect(item.question).toMatch(/？$/);
+      expect(item.answer).not.toMatch(/[\r\n<>]/);
+    }
+  });
+
+  it('buildServices 接案信箱', () => {
+    expect(buildServices(site).contactEmail).toBe(site.contactEmails.work);
+    expect(buildServices(siteWithoutWorkEmail).contactEmail).toBeNull();
+  });
+
+  it('buildServices 頁面文字都在內容函式裡', () => {
+    const content = buildServices(site);
+
+    expect(content.intro.trim()).not.toBe('');
+    expect(content.relatedTitle).toBe('相關作品');
+    expect(content.contact.title.trim()).not.toBe('');
+    expect(content.contact.description.trim()).not.toBe('');
+  });
+
+  it('buildServices 不寫 P1 沒定的承諾', () => {
+    const allText = collectStrings(buildServices(site)).join('\n');
+
+    for (const banned of ['線上說明', '原始碼', '一上線就']) expect(allText, banned).not.toContain(banned);
+  });
+
+  it('buildServices 文案規則', () => {
+    expect(writingRuleViolations(collectStrings(buildServices(site)))).toEqual([]);
+  });
+});
+
+describe('formatServicePrice', () => {
+  it('formatServicePrice 四種寫法', () => {
+    expect(formatServicePrice(fakeService({ priceFrom: 8000, priceUnit: null, quoteRequired: false }))).toBe('NT$8,000 起');
+    expect(formatServicePrice(fakeService({ priceFrom: 5000, priceUnit: '每頁', quoteRequired: false }))).toBe('每頁 NT$5,000 起');
+    expect(formatServicePrice(fakeService({ priceFrom: 100000, priceUnit: null, quoteRequired: true }))).toBe('NT$100,000 起，需洽談');
+    expect(formatServicePrice(fakeService({ priceFrom: null, priceUnit: null, quoteRequired: false }))).toBe('另行報價');
+  });
+});

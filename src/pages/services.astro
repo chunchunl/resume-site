@@ -1,0 +1,76 @@
+---
+/**
+ * 接案服務頁：四項服務與起價、合作方式、相關案例、常見問題、接案信箱。
+ * 頁面上的價格與問答，和 Service、FAQPage JSON-LD 讀同一份內容。
+ */
+import FaqSection from '../components/FaqSection.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { buildServices } from '../data/services';
+import { site } from '../data/site';
+import { buildFaqPageJsonLd, buildServiceJsonLd, siteFullName } from '../lib/seo';
+
+const content = buildServices(site);
+const fullName = siteFullName(site);
+---
+
+<BaseLayout
+  title={`接案服務｜${fullName}`}
+  description={`${fullName} 的接案服務：AEO 網站健檢、形象網站、Figma 轉 React 前端、報名與管理系統，附起價與合作方式。`}
+  jsonLd={[...content.services.map((service) => buildServiceJsonLd(site, service)), buildFaqPageJsonLd(content.faq)]}
+>
+  <section class="section section--first" aria-labelledby="services-title">
+    <div class="container">
+      <h1 class="page-title" id="services-title">接案服務</h1>
+      <p class="section__lead">{content.intro}</p>
+      <div class="service-grid">
+        {content.services.map((service) => <ServiceCard service={service} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--muted" data-section="rules" aria-labelledby="rules-title">
+    <div class="container">
+      <h2 class="section__title" id="rules-title">合作方式</h2>
+      <ol class="rule-list">
+        {content.rules.map((rule) => <li>{rule}</li>)}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section" data-section="related-cases" aria-labelledby="related-title">
+    <div class="container">
+      <h2 class="section__title" id="related-title">{content.relatedTitle}</h2>
+      <ul class="work-list">
+        {
+          content.relatedCases.map((item) => (
+            <li class="work-list__item">
+              <h3 class="work-list__title">
+                <a href={item.href}>{item.title}</a>
+              </h3>
+              <p class="work-list__meta">{item.context}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <div class="container">
+    <FaqSection faq={content.faq} />
+  </div>
+
+  {
+    content.contactEmail && (
+      <section class="section section--contact" data-section="contact" aria-labelledby="services-contact-title">
+        <div class="container">
+          <h2 class="section__title" id="services-contact-title">{content.contact.title}</h2>
+          <p class="section__lead">{content.contact.description}</p>
+          <p class="service-contact__email">
+            <a href={`mailto:${content.contactEmail}`}>{content.contactEmail}</a>
+          </p>
+        </div>
+      </section>
+    )
+  }
+</BaseLayout>

@@ -823,6 +823,74 @@ a:hover {
   fill: var(--color-accent);
 }
 
+/* ---------- 接案服務 ---------- */
+
+.service-grid {
+  display: grid;
+  gap: var(--space-5);
+  margin-top: var(--space-6);
+}
+
+.service-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+}
+
+.service-card__title {
+  font-size: var(--text-xl);
+  /* 窄螢幕換行時讓兩行長度接近，括號比較不會被單獨切到下一行。 */
+  text-wrap: balance;
+}
+
+.service-card__price {
+  color: var(--color-accent);
+  font-size: var(--text-lg);
+  font-weight: 700;
+}
+
+.service-card__details {
+  display: grid;
+  gap: var(--space-3);
+  font-size: var(--text-sm);
+}
+
+.service-card__details dt {
+  margin-bottom: var(--space-1);
+  color: var(--color-text-muted);
+  font-weight: 700;
+}
+
+.service-card__list {
+  display: grid;
+  gap: var(--space-1);
+  padding-left: var(--space-5);
+  list-style: disc;
+}
+
+.service-card__list--excluded {
+  color: var(--color-text-muted);
+}
+
+.service-contact__email {
+  margin-top: var(--space-4);
+  font-size: var(--text-lg);
+  font-weight: 700;
+}
+
+.rule-list {
+  display: grid;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+  padding-left: var(--space-5);
+  list-style: decimal;
+}
+
 /* ---------- 平板以上 ---------- */
 
 @media (min-width: 48rem) {
@@ -844,6 +912,10 @@ a:hover {
 
   .principle-list {
     grid-template-columns: repeat(3, 1fr);
+  }
+
+  .service-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .diagram {

@@ -7,6 +7,7 @@ import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { facts } from '../src/data/facts';
+import { buildServices, type ServiceItem } from '../src/data/services';
 import { site } from '../src/data/site';
 
 /** 必填欄位檢查的結果。 */
@@ -55,6 +56,15 @@ export function checkRequiredFields(value: unknown, options: { ignore?: string[]
 }
 
 /**
+ * 檢查每項服務的起價有沒有填；沒填的回報成「服務代號.priceFrom」。
+ * 計價單位可以是 `null`（以整案計價），不算缺。
+ */
+export function checkServicePrices(services: ServiceItem[]): RequiredFieldsResult {
+  const missing = services.filter((service) => service.priceFrom === null).map((service) => `${service.id}.priceFrom`);
+  return { ok: missing.length === 0, missing };
+}
+
+/**
  * 找出文字裡的佔位符。
  * @param text 檔案內容。
  * @param file 檔案路徑，只用來回報。
@@ -90,6 +100,9 @@ function main(): void {
   }
   for (const field of checkRequiredFields(facts).missing) {
     messages.push(`src/data/facts.ts  欄位 ${field} 還沒填`);
+  }
+  for (const field of checkServicePrices(buildServices(site).services).missing) {
+    messages.push(`src/data/services.ts  欄位 ${field} 還沒填`);
   }
 
   if (existsSync(distDir)) {

@@ -1,0 +1,42 @@
+---
+/**
+ * 接案頁的服務卡：名稱、起價、適合誰、包含與不包含。
+ * 卡片的 data-section 是服務代號，測試用它對照 JSON-LD 的價格。
+ */
+import { formatServicePrice, type ServiceItem } from '../data/services';
+
+interface Props {
+  /** 服務內容。 */
+  service: ServiceItem;
+}
+
+const { service } = Astro.props;
+const titleId = `service-${service.id}`;
+---
+
+<article class="service-card" data-section={service.id} aria-labelledby={titleId}>
+  <h2 class="service-card__title" id={titleId}>{service.name}</h2>
+  <p class="service-card__price">{formatServicePrice(service)}</p>
+  <dl class="service-card__details">
+    <div>
+      <dt>適合誰</dt>
+      <dd>{service.audience}</dd>
+    </div>
+    <div>
+      <dt>包含</dt>
+      <dd>
+        <ul class="service-card__list">
+          {service.includes.map((item) => <li>{item}</li>)}
+        </ul>
+      </dd>
+    </div>
+    <div>
+      <dt>不包含</dt>
+      <dd>
+        <ul class="service-card__list service-card__list--excluded">
+          {service.excludes.map((item) => <li>{item}</li>)}
+        </ul>
+      </dd>
+    </div>
+  </dl>
+</article>

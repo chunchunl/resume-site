@@ -60,7 +60,7 @@ export interface CaseContent {
 }
 
 /** 網址代號的格式：小寫英文、數字與連字號。 */
-const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+export const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 /** FAQ 至少要有幾組。 */
 export const MIN_FAQ_COUNT = 3;

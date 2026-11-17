@@ -1,3 +1,4 @@
+import type { ServiceItem } from '../data/services';
 import type { Site } from '../data/site';
 
 /** 一份 JSON-LD 結構化資料。 */
@@ -153,5 +154,28 @@ export function buildBreadcrumbJsonLd(site: Site, items: BreadcrumbItem[]): Json
       name: item.name,
       item: absoluteUrl(site, item.path),
     })),
+  };
+}
+
+/**
+ * 產生一項服務的 `Service` JSON-LD：描述寫包含什麼，適合誰放在 `audience`，提供者指向首頁的 `Person`。
+ * 沒有起價的服務不輸出 `offers`。
+ */
+export function buildServiceJsonLd(site: Site, service: ServiceItem): JsonLd {
+  const priceSpecification =
+    service.priceUnit === null
+      ? { '@type': 'PriceSpecification', minPrice: service.priceFrom, priceCurrency: 'TWD' }
+      : { '@type': 'UnitPriceSpecification', minPrice: service.priceFrom, priceCurrency: 'TWD', unitText: service.priceUnit };
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: service.name,
+    description: service.includes.join('、'),
+    url: absoluteUrl(site, `/services/#service-${service.id}`),
+    audience: { '@type': 'Audience', audienceType: service.audience },
+    // 帶上名稱，單獨看這一頁也知道提供者是誰；同一個 @id 會和首頁的 Person 合併。
+    provider: { '@type': 'Person', '@id': personId(site), name: siteFullName(site) },
+    ...(service.priceFrom === null ? {} : { offers: { '@type': 'Offer', priceSpecification } }),
   };
 }
