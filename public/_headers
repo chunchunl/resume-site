@@ -9,6 +9,10 @@
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=()
 
+# 正式環境對 .txt 只回 text/plain、不帶 charset；llms.txt 有中文，明確指定 UTF-8。
+/llms.txt
+  Content-Type: text/plain; charset=utf-8
+
 # 預覽網址不讓搜尋引擎收錄；正式網域不符合這條規則，所以不會帶。
 https://:version.:subdomain.workers.dev/*
   X-Robots-Tag: noindex

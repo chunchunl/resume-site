@@ -236,6 +236,13 @@ describe('dist 基本檢查', () => {
     expect(others, '預覽網址以外的規則帶了 X-Robots-Tag').toEqual([]);
   });
 
+  it('_headers llms.txt 指定 UTF-8', () => {
+    // 正式環境的靜態資源對 .txt 只回 text/plain、不帶 charset；llms.txt 有中文，要明確指定編碼，瀏覽器才不會顯示成亂碼。
+    const llms = parseHeadersFile(readDist('_headers')).get('/llms.txt');
+
+    expect(llms?.get('content-type')).toBe('text/plain; charset=utf-8');
+  });
+
   it('dist 沒有 source map', () => {
     const files = listDistFiles();
     expect(files.filter((file) => file.endsWith('.map'))).toHaveLength(0);
