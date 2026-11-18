@@ -143,7 +143,7 @@ describe('buildHome', () => {
     expect(hero.tagline).toBe('React・TypeScript｜從需求做到上線');
     expect(hero.intro.trim()).not.toBe('');
     expect(hero.actions).toEqual([
-      { label: '找我合作', href: '/services/' },
+      { label: '合作洽詢', href: '/services/' },
       { label: '求職履歷', href: '/resume/' },
     ]);
     expect(hero.links).toEqual([
@@ -170,17 +170,17 @@ describe('buildHome', () => {
       { label: '求職聯絡', address: fullSite.contactEmails.jobs },
     ]);
     expect(contact.links).toEqual([{ label: 'LinkedIn', href: fullSite.links.linkedin }]);
-    expect(contact.description).toContain('兩個');
+    expect(contact.description).toContain('分別');
   });
 
   it('buildHome 聯絡說明提醒可以複製信箱', () => {
     // 電腦沒有設定郵件程式時，點 mailto: 連結不會有反應；提醒訪客可以複製信箱自己寄。
-    const hint = '點信箱會開啟電腦的郵件程式；沒有反應時，可以複製信箱，從你常用的信箱寄信。';
+    const hint = '點選信箱會開啟預設的郵件程式；若無反應，請複製信箱位址後自行寄送。';
 
     // 整句比對：提醒接在原本的說明後面、只出現一次。
-    expect(buildHome(factsA, fullSite).contact.description).toBe(`接案與求職分成兩個信箱，請寫信到對應的位址。${hint}`);
+    expect(buildHome(factsA, fullSite).contact.description).toBe(`接案洽詢與求職聯繫，請分別來信至下列信箱。${hint}`);
     const oneEmail = buildHome(factsA, { ...fullSite, contactEmails: { work: null, jobs: fullSite.contactEmails.jobs } });
-    expect(oneEmail.contact.description).toBe(`請寫信到下面的信箱。${hint}`);
+    expect(oneEmail.contact.description).toBe(`請來信至下列信箱。${hint}`);
     // 沒有任何信箱時，不提信箱。
     const noEmail = buildHome(factsA, { ...fullSite, contactEmails: { work: null, jobs: null } });
     expect(noEmail.contact.description).not.toContain(hint);
@@ -196,8 +196,8 @@ describe('buildHome', () => {
     expect(home.hero.links).toEqual([{ label: 'GitHub', href: fullSite.links.github }]);
     expect(home.contact.emails).toEqual([{ label: '求職聯絡', address: fullSite.contactEmails.jobs }]);
     expect(home.contact.links).toEqual([]);
-    // 只剩一個信箱時，說明文字不能再寫「兩個信箱」。
-    expect(home.contact.description).not.toContain('兩個');
+    // 只剩一個信箱時，說明文字不能再寫「分別來信」。
+    expect(home.contact.description).not.toContain('分別');
     expect(JSON.stringify(home)).not.toContain('null');
   });
 

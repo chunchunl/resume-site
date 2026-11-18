@@ -1,6 +1,6 @@
 ---
 /**
- * 接案頁的服務卡：名稱、起價、適合誰、包含與不包含。
+ * 接案頁的服務卡：名稱、起價、適用對象、服務內容與不含項目。
  * 卡片的 data-section 是服務代號，測試用它對照 JSON-LD 的價格。
  */
 import { formatServicePrice, type ServiceItem } from '../data/services';
@@ -19,11 +19,11 @@ const titleId = `service-${service.id}`;
   <p class="service-card__price">{formatServicePrice(service)}</p>
   <dl class="service-card__details">
     <div>
-      <dt>適合誰</dt>
+      <dt>適用對象</dt>
       <dd>{service.audience}</dd>
     </div>
     <div>
-      <dt>包含</dt>
+      <dt>服務內容</dt>
       <dd>
         <ul class="service-card__list">
           {service.includes.map((item) => <li>{item}</li>)}
@@ -31,7 +31,7 @@ const titleId = `service-${service.id}`;
       </dd>
     </div>
     <div>
-      <dt>不包含</dt>
+      <dt>不含項目</dt>
       <dd>
         <ul class="service-card__list service-card__list--excluded">
           {service.excludes.map((item) => <li>{item}</li>)}

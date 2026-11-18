@@ -66,10 +66,10 @@ const SERVICES: ServiceItem[] = [
   {
     id: 'aeo-audit',
     name: 'AEO 網站健檢報告',
-    audience: '已經有官網，想知道 Google 與 AI 搜尋讀不讀得懂網站內容的品牌或店家。',
+    audience: '已有官網，希望了解 Google 與 AI 搜尋能否讀懂網站內容的品牌或店家。',
     includes: [
       '檢查結構化資料、標題與描述、canonical、sitemap 與 robots.txt',
-      '確認 AI 爬蟲讀得到主要內容',
+      '確認 AI 爬蟲可讀取主要內容',
       '一份列出必修與建議項目的報告',
     ],
     excludes: ['直接修改網站程式', '文案撰寫', '廣告投放'],
@@ -80,7 +80,7 @@ const SERVICES: ServiceItem[] = [
   {
     id: 'brand-site-aeo',
     name: '形象網站＋AEO 基礎設定（5 頁內）',
-    audience: '想要一個頁數不多的新官網，並希望一開始就做好讓搜尋引擎與 AI 讀懂的設定的個人或小品牌。',
+    audience: '需要頁數不多的新官網，並希望建站時一併完成搜尋引擎與 AI 可讀取設定的個人或小型品牌。',
     includes: ['5 頁內的 Astro 靜態網站', '手機與桌機版面', '結構化資料、sitemap 與 robots.txt', '部署上線'],
     excludes: ['文案撰寫與攝影', '網域與主機費用', '會員、金流等需要後端的功能'],
     priceFrom: 30000,
@@ -90,8 +90,8 @@ const SERVICES: ServiceItem[] = [
   {
     id: 'figma-to-react',
     name: 'Figma 轉 React 前端',
-    audience: '已經有 Figma 設計稿，需要前端工程師把畫面做成 React 元件的團隊。',
-    includes: ['依設計稿做成 React 與 TypeScript 元件', '手機與桌機版面'],
+    audience: '已有 Figma 設計稿，需要前端工程師將畫面實作為 React 元件的團隊。',
+    includes: ['依設計稿實作 React 與 TypeScript 元件', '手機與桌機版面'],
     excludes: ['設計稿本身', '後端 API 與資料庫'],
     priceFrom: 5000,
     priceUnit: '每頁',
@@ -100,7 +100,7 @@ const SERVICES: ServiceItem[] = [
   {
     id: 'custom-system',
     name: '報名／預約／內部管理系統',
-    audience: '活動報名、預約或內部作業還靠試算表與紙本，想整合成一套系統的團隊。',
+    audience: '活動報名、預約或內部作業仍仰賴試算表與紙本，希望整合為單一系統的團隊。',
     includes: ['需求訪談與流程整理', '前端、後端與資料庫開發', '自動測試與部署上線'],
     excludes: ['硬體設備', '第三方服務的月費', '需求範圍以外的功能'],
     priceFrom: 100000,
@@ -114,11 +114,11 @@ const RULES = ['先確認需求範圍，再提供報價。', '報價含 2 輪修
 
 /** 常見問題；三條規則各一組，另一組說明案例的來歷。 */
 const FAQ: FaqItem[] = [
-  { question: '怎麼開始合作？', answer: '請先寫信說明需求，我會和你確認需求範圍，再提供報價。' },
-  { question: '報價含幾次修改？', answer: '報價含 2 輪修改。' },
-  { question: '付款方式是什麼？', answer: '分期付款。一般案分兩期 50／50，系統案分三期 30／40／30。' },
+  { question: '如何開始合作？', answer: '請先來信說明需求，我會與您確認需求範圍，再提供報價。' },
+  { question: '報價包含幾次修改？', answer: '報價含 2 輪修改。' },
+  { question: '付款方式為何？', answer: '分期付款。一般案分兩期 50／50，系統案分三期 30／40／30。' },
   {
-    question: '頁面上的案例是客戶的專案嗎？',
+    question: '頁面上的案例是否為客戶的專案？',
     answer: '頁面上的案例是我在 Curves 的工作成果與個人專案，不是接案客戶的專案。',
   },
 ];
@@ -139,15 +139,15 @@ export function buildServices(site: Site): ServicesContent {
   const copyHint = site.contactEmails.work ? EMAIL_COPY_HINT : '';
 
   return {
-    intro: '我接四種案子。每一項都寫明適合誰、包含什麼、不包含什麼，以及從多少錢起。',
+    intro: '提供四項服務，各項均列明適用對象、服務內容、不含項目與起價。',
     services: SERVICES,
     rules: RULES,
     faq: FAQ,
     relatedTitle: '相關作品',
     relatedCases: RELATED_CASES,
     contact: {
-      title: '寫信給我',
-      description: `請簡單說明需求、預計時程與預算範圍，我會先回信確認需求範圍。${copyHint}`,
+      title: '來信洽詢',
+      description: `來信時請簡述需求、預計時程與預算範圍，我會先回信確認需求範圍。${copyHint}`,
     },
     contactEmail: site.contactEmails.work,
   };

@@ -39,26 +39,26 @@ export function buildPrivacy(site: Site): PrivacyContent {
   return {
     title: `隱私說明｜${siteFullName(site)}`,
     heading: '隱私說明',
-    intro: '這頁說明這個網站有沒有使用 cookie，以及我怎麼處理流量統計與來信。',
+    intro: '本頁說明本網站是否使用 cookie，以及流量統計與來信的處理方式。',
     sections: [
       {
         heading: 'Cookie 與追蹤碼',
-        paragraphs: ['這個網站不使用 cookie。除了下面的流量統計，沒有安裝廣告或其他追蹤碼。'],
+        paragraphs: ['本網站不使用 cookie。除下列流量統計外，未安裝廣告或其他追蹤碼。'],
       },
       {
         heading: '流量統計',
         paragraphs: [
-          '我使用 Cloudflare Web Analytics 統計網站的彙總流量，例如每一頁被瀏覽的次數。依 Cloudflare 的說明，這項服務不使用 cookie，也不會跨網站追蹤個別訪客。',
+          '本網站使用 Cloudflare Web Analytics 統計彙總流量，例如各頁面的瀏覽次數。依 Cloudflare 的說明，此服務不使用 cookie，也不會跨網站追蹤個別訪客。',
         ],
       },
       {
-        heading: '寫信給我',
+        heading: '來信處理',
         paragraphs: [
-          '寫信到下面的公開信箱時，信件會經過 Cloudflare 的轉寄服務送到我的信箱。信件內容只用於回覆洽詢與後續的合作往來。',
+          '寄至下列公開信箱的信件，會經由 Cloudflare 的轉寄服務送達我的信箱。信件內容只用於回覆洽詢與後續的合作往來。',
         ],
       },
       {
-        heading: '資料在哪裡處理',
+        heading: '資料處理地點',
         paragraphs: ['流量統計與信件轉寄由 Cloudflare 提供，相關資料可能在台灣以外的地區處理。'],
       },
       {

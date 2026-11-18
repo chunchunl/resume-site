@@ -94,10 +94,10 @@ describe('buildServices', () => {
 
   it('buildServices 聯絡說明提醒可以複製信箱', () => {
     // 電腦沒有設定郵件程式時，點 mailto: 連結不會有反應；提醒訪客可以複製信箱自己寄。
-    const hint = '點信箱會開啟電腦的郵件程式；沒有反應時，可以複製信箱，從你常用的信箱寄信。';
+    const hint = '點選信箱會開啟預設的郵件程式；若無反應，請複製信箱位址後自行寄送。';
 
     // 整句比對：提醒接在原本的說明後面、只出現一次。
-    expect(buildServices(site).contact.description).toBe(`請簡單說明需求、預計時程與預算範圍，我會先回信確認需求範圍。${hint}`);
+    expect(buildServices(site).contact.description).toBe(`來信時請簡述需求、預計時程與預算範圍，我會先回信確認需求範圍。${hint}`);
     // 沒有信箱時頁面不顯示聯絡區塊，說明也不需要這句。
     expect(buildServices(siteWithoutWorkEmail).contact.description).not.toContain(hint);
   });

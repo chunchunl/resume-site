@@ -23,7 +23,7 @@ const SERVICES = [
   <svg viewBox="0 0 360 452" role="img" aria-labelledby={titleId} aria-describedby={descId} xmlns="http://www.w3.org/2000/svg">
     <title id={titleId}>活動報名與驗票平台的分層架構</title>
     <desc id={descId}>
-      店舖前台、總部後台與手機驗票三種入口共用 React 與 TypeScript 前端，再呼叫 Node.js 與 Express API；API 連到 SQL Server、Email 服務與 Socket.IO 即時看板；整個服務部署在 Azure Web App。
+      店舖前台、總部後台與手機驗票三種入口共用 React 與 TypeScript 前端，再呼叫 Node.js 與 Express API；API 連接至 SQL Server、Email 服務與 Socket.IO 即時看板；整個服務部署於 Azure Web App。
     </desc>
     <defs>
       <marker id={markerId} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
@@ -85,9 +85,9 @@ const SERVICES = [
     <rect class="diagram__box diagram__box--soft" x="8" y="364" width="344" height="72" rx="10"></rect>
     <text class="diagram__label" x="180" y="392" text-anchor="middle">雲端平台：Azure Web App</text>
     <text class="diagram__note" x="180" y="414" text-anchor="middle">前端、API 與看板由同一個服務提供</text>
-    <text class="diagram__note" x="180" y="430" text-anchor="middle">Jenkins 先跑測試，通過才部署</text>
+    <text class="diagram__note" x="180" y="430" text-anchor="middle">Jenkins 先執行測試，通過後才部署</text>
   </svg>
   <figcaption>
-    圖：三種入口共用同一套前端與 API；API 連到資料庫、Email 與即時看板，整個服務部署在雲端平台。
+    圖：三種入口共用同一套前端與 API；API 連接至資料庫、Email 與即時看板，整個服務部署於雲端平台。
   </figcaption>
 </figure>

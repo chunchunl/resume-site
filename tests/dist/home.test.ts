@@ -50,7 +50,7 @@ describe('dist 首頁', () => {
     expect(normalizeText(hero.text())).toContain(site.tagline);
     expect(hero.find('a[href="/services/"]')).toHaveLength(1);
     expect(hero.find('a[href="/resume/"]')).toHaveLength(1);
-    expect(normalizeText(hero.find('a[href="/services/"]').text())).toBe('找我合作');
+    expect(normalizeText(hero.find('a[href="/services/"]').text())).toBe('合作洽詢');
     expect(normalizeText(hero.find('a[href="/resume/"]').text())).toBe('求職履歷');
     // 頭像還沒提供，首頁先不放任何圖片。
     expect($('main img')).toHaveLength(0);

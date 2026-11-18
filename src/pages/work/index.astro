@@ -9,11 +9,11 @@ import { siteFullName } from '../../lib/seo';
 const cases = getCases('zh-TW', facts);
 ---
 
-<BaseLayout title={`案例｜${siteFullName(site)}`} description={`${siteFullName(site)} 的作品案例：問題、我負責的範圍、驗證方式與結果。`}>
+<BaseLayout title={`案例｜${siteFullName(site)}`} description={`${siteFullName(site)} 的作品案例：問題、負責範圍、驗證方式與結果。`}>
   <section class="section section--first" aria-labelledby="work-title">
     <div class="container">
       <h1 class="page-title" id="work-title">案例</h1>
-      <p class="section__lead">每個案例都寫清楚要解決的問題、我負責的範圍、怎麼驗證，以及結果。</p>
+      <p class="section__lead">各案例均說明要解決的問題、負責範圍、驗證方式與結果。</p>
       <ul class="work-list">
         {
           cases.map((content) => (

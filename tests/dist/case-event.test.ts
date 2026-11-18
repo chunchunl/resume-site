@@ -60,7 +60,7 @@ describe('dist 活動案例頁', () => {
       .map((element) => normalizeText($(element).text()));
 
     expect(headings.filter((heading) => heading.endsWith('？')).length).toBeGreaterThanOrEqual(4);
-    expect(headings).toContain('結果是什麼？');
+    expect(headings).toContain('結果為何？');
     expect(normalizeText($('main h1').text())).toBe('活動報名與驗票平台');
   });
 

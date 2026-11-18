@@ -76,7 +76,7 @@ const breadcrumb: BreadcrumbItem[] = [
       }
 
       <section class="case-section" data-section="results" aria-labelledby="results-title">
-        <h2 id="results-title">結果是什麼？</h2>
+        <h2 id="results-title">結果為何？</h2>
         <ul class="case__results">
           {content.results.map((result) => <li>{result}</li>)}
         </ul>
@@ -85,7 +85,7 @@ const breadcrumb: BreadcrumbItem[] = [
       <FaqSection faq={content.faq} />
 
       <aside class="case__ai-note" data-section="ai-note" aria-labelledby="ai-note-title">
-        <h2 id="ai-note-title">我怎麼和 AI 協作？</h2>
+        <h2 id="ai-note-title">如何與 AI 協作？</h2>
         <p>{content.aiNote}</p>
       </aside>
     </div>

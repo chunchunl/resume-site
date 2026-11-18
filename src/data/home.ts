@@ -139,13 +139,13 @@ export function siteProfiles(site: Site): HomeLink[] {
  * 信箱旁的提醒：電腦沒有設定郵件程式時，點 `mailto:` 連結不會有反應，訪客可以複製信箱自己寄。
  * 首頁與接案頁的聯絡說明共用這一句。
  */
-export const EMAIL_COPY_HINT = '點信箱會開啟電腦的郵件程式；沒有反應時，可以複製信箱，從你常用的信箱寄信。';
+export const EMAIL_COPY_HINT = '點選信箱會開啟預設的郵件程式；若無反應，請複製信箱位址後自行寄送。';
 
 /** 依實際有幾個信箱產生聯絡說明，避免文字和資料對不上；有信箱時附上複製信箱的提醒。 */
 function contactDescription(emailCount: number): string {
-  if (emailCount >= 2) return `接案與求職分成兩個信箱，請寫信到對應的位址。${EMAIL_COPY_HINT}`;
-  if (emailCount === 1) return `請寫信到下面的信箱。${EMAIL_COPY_HINT}`;
-  return '可以從下面的連結找到我。';
+  if (emailCount >= 2) return `接案洽詢與求職聯繫，請分別來信至下列信箱。${EMAIL_COPY_HINT}`;
+  if (emailCount === 1) return `請來信至下列信箱。${EMAIL_COPY_HINT}`;
+  return '請透過下列連結聯繫。';
 }
 
 /**
@@ -163,9 +163,9 @@ export function buildHome(facts: Facts, site: Site): HomeContent {
       jobTitle: site.jobTitle,
       tagline: site.tagline,
       intro:
-        '有視覺設計背景的前端工程師。我在連鎖健身品牌 Curves 擔任唯一開發者，從零完成活動報名驗票平台，也在既有企業架構裡端到端交付會員獎勵系統。除了 React 前端，我也負責資料庫、後端 API、排程、測試與部署。',
+        '具視覺設計背景的前端工程師。我在連鎖健身品牌 Curves 從零獨立開發活動報名驗票平台，並在既有企業架構中端到端交付會員獎勵系統。除 React 前端外，亦負責資料庫、後端 API、排程、測試與部署。',
       actions: [
-        { label: '找我合作', href: '/services/' },
+        { label: '合作洽詢', href: '/services/' },
         { label: '求職履歷', href: '/resume/' },
       ],
       links: siteProfiles(site),
@@ -176,12 +176,12 @@ export function buildHome(facts: Facts, site: Site): HomeContent {
         href: '/work/event-ticketing-platform/',
         org: CURVES,
         summary:
-          '把原本散在試算表、Email 與紙本名單的活動流程，整合成店舖報名、電子票券、手機驗票與即時看板的一套平台。',
-        role: '唯一開發者（需求、設計、前後端、資料庫、測試、部署）',
+          '將原本分散於試算表、Email 與紙本名單的活動流程，整合為涵蓋店舖報名、電子票券、手機驗票與即時看板的單一平台。',
+        role: '獨立開發（需求、設計、前後端、資料庫、測試、部署）',
         tech: ['React', 'TypeScript', 'MUI', 'Node.js／Express', 'SQL Server', 'Socket.IO', 'Azure Web App', 'Jenkins'],
         results: [
           `後端 ${formatNumber(eventPlatform.backendTests)} 項、前端 ${formatNumber(eventPlatform.frontendTests)} 項自動測試通過，lint 0`,
-          `上線前以瀏覽器端到端驗證，找出並修正 ${formatNumber(eventPlatform.e2eIssuesFixed)} 個單元測試沒抓到的跨角色問題`,
+          `上線前以瀏覽器端到端驗證，找出並修正 ${formatNumber(eventPlatform.e2eIssuesFixed)} 個單元測試未發現的跨角色問題`,
           `UAT 壓測 ${formatNumber(eventPlatform.loadTestRequests)} 個請求無非預期錯誤`,
         ],
       },
@@ -190,12 +190,12 @@ export function buildHome(facts: Facts, site: Site): HomeContent {
         href: '/work/member-milestone-rewards/',
         org: CURVES,
         summary:
-          `會員每累積 ${formatNumber(rewardSystem.milestoneVisits)} 次運動可獲得紀念 T 恤。系統自動追蹤進度、通知填尺寸、產生店舖訂購名單，並處理領取與轉店。`,
-        role: '唯一開發者（後端團隊提供架構與 code review 諮詢）',
+          `會員每累積 ${formatNumber(rewardSystem.milestoneVisits)} 次運動可獲得紀念 T 恤。系統自動追蹤進度、通知會員登記尺寸、產生店舖訂購名單，並處理領取與轉店。`,
+        role: '獨立開發（後端團隊提供架構與 code review 諮詢）',
         tech: ['C#／.NET', 'SQL Server', 'Stored Procedure', 'Hangfire', 'React'],
         results: [
           '獨立完成資料模型、狀態機、API、每日與每週排程，以及會員端與店舖端',
-          '排程可重跑不重複，各店錯誤獨立處理，一家出錯不影響其他店',
+          '排程可重新執行而不重複，各店舖錯誤獨立處理，單一店舖出錯不影響其他店舖',
         ],
         status: rewardStatusLabel(rewardSystem.status, 'zh-TW'),
         section: 'reward-system',
@@ -203,13 +203,13 @@ export function buildHome(facts: Facts, site: Site): HomeContent {
       {
         title: '個人 AI 知識平台（RAG）',
         href: '/work/personal-rag-knowledge-platform/',
-        summary: '自己維護的知識問答助理。我從「AI 回答過時」追到資料同步的問題並修好，也讓它只開放給我自己使用。',
+        summary: '自行維護的知識問答助理。從「AI 回答過時」追查到資料同步問題並完成修正，也將使用權限限定為本人。',
         role: '獨立負責問題定義、方案取捨與驗收',
         tech: ['Cloudflare Workers AI', 'Vectorize', 'D1', 'R2', 'LINE Messaging API', 'Cloudflare Access'],
         results: [
           `找出同步中斷的原因，重建約 ${formatNumber(rag.indexedChunks)} 個索引段落並補上日期資訊`,
-          `固定評估題組由 ${formatRatio(rag.evalBefore, 'zh-TW')} 題提升到 ${formatRatio(rag.evalAfter, 'zh-TW')} 題`,
-          'LINE 與網站兩個入口都只開放給我自己，並從外部逐一驗證',
+          `固定評估題組由 ${formatRatio(rag.evalBefore, 'zh-TW')} 題提升至 ${formatRatio(rag.evalAfter, 'zh-TW')} 題`,
+          'LINE 與網站兩個入口均僅限本人使用，並從外部逐一驗證',
         ],
       },
     ],
@@ -217,26 +217,26 @@ export function buildHome(facts: Facts, site: Site): HomeContent {
       {
         title: '庫存管理系統規劃',
         description:
-          '我主導店舖進貨、出貨、調撥、退單與贈品領用的需求、操作流程與 Figma 介面，並執行 API 驗收。程式由其他工程師實作。',
+          '主導店舖進貨、出貨、調撥、退單與贈品領用的需求、操作流程與 Figma 介面，並執行 API 驗收。程式由其他工程師實作。',
         href: '/work/inventory-system-planning/',
       },
     ],
     howIWork: [
       {
-        title: '先把規則弄清楚再寫畫面',
-        description: '我先釐清使用者、資料來源與業務規則，再決定介面與技術。',
+        title: '先釐清規則，再實作畫面',
+        description: '先釐清使用者、資料來源與業務規則，再決定介面與技術。',
       },
       {
-        title: '用驗證說話',
-        description: '單元測試、整合測試、瀏覽器端到端測試都過，再加上實際環境的結果，我才算完成。',
+        title: '以驗證結果為依據',
+        description: '單元測試、整合測試與瀏覽器端到端測試全數通過，並取得實際環境的結果後，才視為完成。',
       },
       {
-        title: 'AI 是工具，品質我負責',
-        description: 'AI 協助我探索與實作。我用既有程式、失敗的測試與實測結果核對，不直接相信生成的內容。',
+        title: 'AI 是工具，品質由我負責',
+        description: 'AI 協助探索與實作。生成的內容以既有程式、失敗的測試與實測結果核對，不直接採信。',
       },
     ],
     contact: {
-      title: '聯絡我',
+      title: '聯絡方式',
       description: contactDescription(siteEmails(site).length),
       emails: siteEmails(site),
       links: presentLinks([{ label: 'LinkedIn', href: site.links.linkedin }]),

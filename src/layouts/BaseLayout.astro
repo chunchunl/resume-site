@@ -59,7 +59,7 @@ const beacon = buildAnalyticsBeacon(site);
     {jsonLd.map((data) => <script type="application/ld+json" set:html={serializeJsonLd(data)} />)}
   </head>
   <body>
-    <a class="skip-link" href="#main">跳到主要內容</a>
+    <a class="skip-link" href="#main">跳至主要內容</a>
     <SiteHeader currentPath={Astro.url.pathname} />
     <main id="main">
       <slot />

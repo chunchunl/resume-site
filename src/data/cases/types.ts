@@ -51,7 +51,7 @@ export interface CaseContent {
   maturity: string;
   /** 問句式段落。 */
   sections: CaseSection[];
-  /** 結果條列，輸出在「結果是什麼？」段落內。 */
+  /** 結果條列，輸出在「結果為何？」段落內。 */
   results: string[];
   /** 常見問題，至少 3 組。 */
   faq: CaseFaq[];

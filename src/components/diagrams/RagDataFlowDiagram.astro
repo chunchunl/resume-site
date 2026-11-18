@@ -11,9 +11,9 @@ const markerId = 'rag-data-flow-arrow';
 /** 主線的四個步驟；縱向位置由索引算出。 */
 const STEPS = [
   { label: '個人筆記', note: '筆記更新後自動觸發同步' },
-  { label: '自動同步', note: '切成段落、轉成向量；持憑證才能寫入' },
+  { label: '自動同步', note: '切分段落、轉為向量；持憑證才能寫入' },
   { label: '向量索引', note: 'Vectorize 存放段落向量' },
-  { label: '問答', note: '找出相關段落，交給 Workers AI 回答' },
+  { label: '問答', note: '找出相關段落，交由 Workers AI 回答' },
 ];
 const TOP = 16;
 const STEP_HEIGHT = 56;
@@ -39,7 +39,7 @@ const columnCenter = (x: number): number => x + COLUMN_WIDTH / 2;
   <svg viewBox={`0 0 360 ${viewHeight}`} role="img" aria-labelledby={titleId} aria-describedby={descId} xmlns="http://www.w3.org/2000/svg">
     <title id={titleId}>個人 AI 知識平台的資料流</title>
     <desc id={descId}>
-      個人筆記更新後自動同步，切成段落並轉成向量存進向量索引；提問時找出相關段落，交給 Workers AI 回答。回答從 LINE 或網站兩個入口回到使用者：LINE 入口只回應我本人的帳號，網站要先通過 Cloudflare Access 登入。
+      個人筆記更新後自動同步，切分為段落並轉為向量，存入向量索引；提問時找出相關段落，交由 Workers AI 回答。回答經由 LINE 或網站兩個入口傳回使用者：LINE 入口僅回應本人帳號，網站須先通過 Cloudflare Access 登入。
     </desc>
     <defs>
       <marker id={markerId} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
@@ -121,9 +121,9 @@ const columnCenter = (x: number): number => x + COLUMN_WIDTH / 2;
       ))
     }
 
-    <text class="diagram__caption" x="180" y={userY} text-anchor="middle">兩個入口都只開放給我本人</text>
+    <text class="diagram__caption" x="180" y={userY} text-anchor="middle">兩個入口均僅限本人使用</text>
   </svg>
   <figcaption>
-    圖：筆記同步進向量索引，提問時找出相關段落再回答；LINE 與網站兩個入口各有存取控制，只開放給我本人。
+    圖：筆記同步至向量索引，提問時先找出相關段落再回答；LINE 與網站兩個入口各有存取控制，僅限本人使用。
   </figcaption>
 </figure>

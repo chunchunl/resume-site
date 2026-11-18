@@ -11,8 +11,8 @@ const markerId = 'reward-states-arrow';
 
 /** 主線的六個階段；縱向位置由索引算出。 */
 const STATES = [
-  { label: '累積中', note: '會員看得到自己的進度' },
-  { label: '可登記尺寸', note: '快達成時提醒登記尺寸' },
+  { label: '累積中', note: '會員可查看自己的進度' },
+  { label: '可登記尺寸', note: '接近達成時提醒登記尺寸' },
   { label: '已訂購', note: '店舖依名單訂購' },
   { label: '已到貨', note: 'T 恤送到店舖' },
   { label: '已滿百', note: '達成里程碑' },
@@ -28,7 +28,7 @@ const TRANSFER_FROM = 1;
 const TRANSFER_TO = 4;
 const transferTop = stateY(TRANSFER_FROM);
 const transferBottom = stateY(TRANSFER_TO) + STATE_HEIGHT;
-const TRANSFER_LINES = ['會員轉店時', '新店舖接手', '還沒領取的', '獎勵'];
+const TRANSFER_LINES = ['會員轉店時', '新店舖接手', '尚未領取的', '獎勵'];
 
 const captionY = stateY(STATES.length) + 8;
 const viewHeight = captionY + 16;
@@ -38,7 +38,7 @@ const viewHeight = captionY + 16;
   <svg viewBox={`0 0 360 ${viewHeight}`} role="img" aria-labelledby={titleId} aria-describedby={descId} xmlns="http://www.w3.org/2000/svg">
     <title id={titleId}>獎勵紀錄的狀態變化</title>
     <desc id={descId}>
-      會員累積運動次數，快達成里程碑時可以登記尺寸，店舖依名單訂購、到貨；會員達成里程碑且衣服已到店後，店舖標記已領取。會員轉店時，新店舖會接手還沒領取的獎勵。每達成一次里程碑，就建立一筆新紀錄。
+      會員累積運動次數，接近里程碑時可登記尺寸，店舖依名單訂購、到貨；會員達成里程碑且衣服已到店後，店舖標記已領取。會員轉店時，新店舖會接手尚未領取的獎勵。每達成一次里程碑，即建立一筆新紀錄。
     </desc>
     <defs>
       <marker id={markerId} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
@@ -99,9 +99,9 @@ const viewHeight = captionY + 16;
       ))
     }
 
-    <text class="diagram__caption" x="8" y={captionY}>每達成一次里程碑，就建立一筆新紀錄</text>
+    <text class="diagram__caption" x="8" y={captionY}>每達成一次里程碑，即建立一筆新紀錄</text>
   </svg>
   <figcaption>
-    圖：一筆獎勵紀錄從累積中、登記尺寸、訂購、到貨、達成到領取，滿百與到貨的先後不一定，兩者都完成才能領取；會員轉店時，新店舖會接手還沒領取的獎勵。
+    圖：一筆獎勵紀錄會經歷累積中、登記尺寸、訂購、到貨、達成與領取；滿百與到貨的先後不一定，兩者皆完成才能領取。會員轉店時，新店舖會接手尚未領取的獎勵。
   </figcaption>
 </figure>

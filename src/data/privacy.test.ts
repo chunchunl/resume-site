@@ -43,7 +43,7 @@ describe('buildPrivacy', () => {
     // 開頭只說明範圍，不宣稱列出網站收到的全部資料（請求本來就會經過 Cloudflare）。
     expect(content.intro).not.toContain('哪些資料');
     // 「其他追蹤碼」要先講明是流量統計以外的；Cloudflare 的做法以它自己的說明為準。
-    expect(text).toContain('除了下面的流量統計');
+    expect(text).toContain('除下列流量統計外');
     expect(text).toContain('依 Cloudflare 的說明');
     expect(text).not.toContain('也不追蹤個別訪客');
     // 成立合作的信件會依合約與報稅保存，用途不能只寫「回覆該次洽詢」；改寫法要先問 Erica（這是對來信者的承諾）。

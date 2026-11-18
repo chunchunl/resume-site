@@ -30,15 +30,15 @@ interface LlmsPage {
 
 /** 「頁面」段列出的頁面，順序即輸出順序。 */
 const PAGES: LlmsPage[] = [
-  { name: '首頁', path: '/', description: '我是誰、三個代表案例、我怎麼工作與聯絡方式。' },
-  { name: '案例列表', path: '/work/', description: '全部案例，每個都寫明問題、我負責的範圍、驗證方式與結果。' },
+  { name: '首頁', path: '/', description: '個人簡介、三個代表案例、工作方式與聯絡方式。' },
+  { name: '案例列表', path: '/work/', description: '全部案例，各案例均說明問題、負責範圍、驗證方式與結果。' },
   { name: '接案服務', path: '/services/', description: '四項接案服務的內容、起價與合作方式。' },
   { name: '求職履歷', path: '/resume/', description: '專業摘要、工作經歷、技能與學歷，可下載 PDF。' },
-  { name: '隱私說明', path: '/privacy/', description: '網站不使用 cookie，以及流量統計與來信怎麼處理。' },
+  { name: '隱私說明', path: '/privacy/', description: '說明網站不使用 cookie，以及流量統計與來信的處理方式。' },
 ];
 
 /** 網站介紹，放在摘要之後。 */
-const INTRO = '這是我的個人網站。案例來自我在 Curves 的工作成果與個人專案，不是接案客戶的專案。';
+const INTRO = '此為我的個人網站。案例來自我在 Curves 的工作成果與個人專案，並非接案客戶的專案。';
 
 /** 把站內路徑轉成正式網址。 */
 function absoluteUrl(site: Site, path: string): string {

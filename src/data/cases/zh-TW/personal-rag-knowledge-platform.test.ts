@@ -49,7 +49,7 @@ describe('個人 AI 知識平台案例', () => {
     expect(content.order).toBe(3);
     expect(content.title).toBe('個人 AI 知識平台（RAG）');
     expect(headings.filter((heading) => heading.endsWith('？')).length).toBeGreaterThanOrEqual(3);
-    for (const required of ['AI 為什麼會回答過時的內容？', '怎麼知道修好了？', '怎麼限制只有本人能用？']) {
+    for (const required of ['AI 為何會回答過時的內容？', '如何確認問題已修正？', '如何限制僅本人可使用？']) {
       expect(headings).toContain(required);
     }
   });

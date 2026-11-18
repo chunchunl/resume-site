@@ -168,7 +168,7 @@ export function buildResume(facts: Facts, site: Site): ResumeContent {
       education: '學歷與培訓',
     },
     summary:
-      '我是有視覺設計背景的前端工程師，主要用 React 開發會員平台與企業內部系統。我參與庫存、會員獎勵、活動報名與權限等跨系統功能，能從需求釐清、介面設計、API 串接一路做到 DEV／UAT 驗證。近期我也擴展到資料庫、後端 API、排程與 AI 應用。',
+      '我是具視覺設計背景的前端工程師，主要以 React 開發會員平台與企業內部系統。參與庫存、會員獎勵、活動報名與權限等跨系統功能，能從需求釐清、介面設計、API 串接一路完成至 DEV／UAT 驗證。近期亦擴展至資料庫、後端 API、排程與 AI 應用。',
     experience: [
       {
         org: '韻智股份有限公司（Curves 台灣總部）',
@@ -176,7 +176,7 @@ export function buildResume(facts: Facts, site: Site): ResumeContent {
         period: '2025-07 至今',
         points: [
           `從零獨立開發活動報名與驗票平台（React／TypeScript、Node.js、SQL Server、Azure），涵蓋店舖報名、QR 票券、手機驗票與即時看板；後端 ${formatNumber(eventPlatform.backendTests)} 項、前端 ${formatNumber(eventPlatform.frontendTests)} 項自動測試通過，UAT 壓測 ${formatNumber(eventPlatform.loadTestRequests)} 個請求無非預期錯誤。`,
-          '獨立開發會員運動里程碑獎勵系統（C#／.NET、SQL Server、Hangfire），設計狀態機與可重跑不重複的每日／每週批次，完成會員端與店舖端。',
+          '獨立開發會員運動里程碑獎勵系統（C#／.NET、SQL Server、Hangfire），設計狀態機與可重新執行而不重複的每日／每週批次，完成會員端與店舖端。',
           '主導庫存系統需求、操作流程與 Figma 規劃，整合總部與店舖多站流程並執行 API 驗收；程式由其他工程師實作。',
           '建立 Astro 衛教內容站原型，完成正式文章頁 AEO 技術檢測。',
         ],

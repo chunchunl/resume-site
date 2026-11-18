@@ -83,7 +83,7 @@ describe('活動報名與驗票平台案例', () => {
     const headings = buildCase(facts).sections.map((section) => section.heading);
 
     expect(headings.filter((heading) => heading.endsWith('？')).length).toBeGreaterThanOrEqual(4);
-    for (const required of ['這個平台解決什麼問題？', '我負責哪些部分？', '怎麼確認它可以上線？']) {
+    for (const required of ['此平台解決的問題是什麼？', '負責範圍包含哪些？', '如何確認可以上線？']) {
       expect(headings).toContain(required);
     }
   });
@@ -92,7 +92,7 @@ describe('活動報名與驗票平台案例', () => {
     const content = buildCase(facts);
 
     expect(content.period).toBe('2026-04 至今');
-    expect(content.role).toBe('唯一開發者');
+    expect(content.role).toBe('獨立開發');
     expect(content.tech).toEqual([
       'React',
       'TypeScript',

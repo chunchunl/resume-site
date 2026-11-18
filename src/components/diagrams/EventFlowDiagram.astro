@@ -13,7 +13,7 @@ const STEPS = [
   { label: '店舖報名', note: '專屬入口報名、修改、取消', y: 16 },
   { label: '確認信與電子票券', note: 'Email 寄出 QR Code 票券', y: 120 },
   { label: '現場掃碼驗票', note: '後端核對活動、訂單與票券', y: 224 },
-  { label: '即時入場看板', note: '每次驗票成功就更新', y: 328 },
+  { label: '即時入場看板', note: '每次驗票成功即更新', y: 328 },
 ];
 const STEP_HEIGHT = 72;
 const ADMIN_ITEMS = ['活動', '座位', '兌換券', '帳款', '通知', '名單匯出'];
@@ -23,7 +23,7 @@ const ADMIN_ITEMS = ['活動', '座位', '兌換券', '帳款', '通知', '名�
   <svg viewBox="0 0 360 416" role="img" aria-labelledby={titleId} aria-describedby={descId} xmlns="http://www.w3.org/2000/svg">
     <title id={titleId}>活動報名與驗票的使用流程</title>
     <desc id={descId}>
-      店舖報名後收到確認信與電子票券，活動當天工作人員掃碼驗票，結果即時更新到入場看板；總部在後台管理活動、座位、兌換券、帳款、通知與名單匯出。
+      店舖報名後收到確認信與電子票券，活動當天工作人員掃碼驗票，結果即時更新至入場看板；總部在後台管理活動、座位、兌換券、帳款、通知與名單匯出。
     </desc>
     <defs>
       <marker id={markerId} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
@@ -76,6 +76,6 @@ const ADMIN_ITEMS = ['活動', '座位', '兌換券', '帳款', '通知', '名�
     }
   </svg>
   <figcaption>
-    圖：店舖報名、收到票券、現場掃碼到即時看板是主線；總部後台管理活動、座位、兌換券、帳款與通知。
+    圖：主線依序為店舖報名、收到票券、現場掃碼與即時看板；總部後台管理活動、座位、兌換券、帳款與通知。
   </figcaption>
 </figure>
