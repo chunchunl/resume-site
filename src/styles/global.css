@@ -576,6 +576,11 @@ a:hover {
   margin-right: var(--space-2);
 }
 
+/* 最後更新的日期時間不在連字號或空白處斷行。 */
+.site-footer__time {
+  white-space: nowrap;
+}
+
 /* ---------- 共用 ---------- */
 
 /* 只給螢幕報讀器讀，畫面上不顯示。 */

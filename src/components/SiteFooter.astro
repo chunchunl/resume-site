@@ -1,11 +1,12 @@
 ---
 /**
- * 全站頁尾：公開信箱、LinkedIn、GitHub 與隱私說明。
- * 值為 null 的信箱或連結不輸出。
+ * 全站頁尾：公開信箱、LinkedIn、GitHub、隱私說明與網站最後更新時間。
+ * 值為 null 的信箱或連結不輸出。最後更新時間取 build 當下（台灣時間），全站相同。
  */
 import { siteEmails, siteProfiles } from '../data/home';
 import { site } from '../data/site';
 import { siteFullName } from '../lib/seo';
+import { buildUpdatedAt } from '../lib/updated';
 
 /** 公開信箱與用途；沒有位址的不列。 */
 const emails = siteEmails(site);
@@ -19,6 +20,9 @@ const profiles = siteProfiles(site);
     <div class="site-footer__identity">
       <p class="site-footer__name">{siteFullName(site)}</p>
       <p>{site.jobTitle}</p>
+      <p>
+        最後更新：<time class="site-footer__time" datetime={buildUpdatedAt.iso}>{buildUpdatedAt.text}</time>（台灣時間）
+      </p>
     </div>
     <ul class="site-footer__list" aria-label="公開信箱">
       {
