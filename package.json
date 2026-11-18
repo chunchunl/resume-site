@@ -20,7 +20,8 @@
     "check:content": "astro build && tsx scripts/check-content.ts",
     "scan:sensitive": "tsx scripts/scan-sensitive.ts",
     "build:pdf": "tsx scripts/build-pdf.ts",
-    "verify": "npm run typecheck && npm run lint && npm run test && npm run check:facts && npm run build && npm run test:dist && npm run scan:sensitive"
+    "verify": "npm run typecheck && npm run lint && npm run test && npm run check:facts && npm run build && npm run test:dist && npm run scan:sensitive",
+    "deploy": "npm run check:content && npm run verify && wrangler deploy"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.5",
@@ -40,6 +41,7 @@
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.73.0",
     "unpdf": "^1.9.1",
-    "vitest": "^5.1.0"
+    "vitest": "^5.1.0",
+    "wrangler": "^4.164.0"
   }
 }

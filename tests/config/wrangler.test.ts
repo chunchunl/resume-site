@@ -1,0 +1,22 @@
+import { readFileSync } from 'node:fs';
+import { describe, expect, it } from 'vitest';
+
+/** 讀取專案根目錄的 wrangler.jsonc；檔案刻意不寫註解，可以直接 JSON.parse。 */
+function readWranglerConfig(): Record<string, unknown> {
+  return JSON.parse(readFileSync(new URL('../../wrangler.jsonc', import.meta.url), 'utf8')) as Record<string, unknown>;
+}
+
+describe('wrangler 設定', () => {
+  it('wrangler 設定', () => {
+    const config = readWranglerConfig();
+
+    expect(config.name).toBe('resume-site');
+    expect(config.compatibility_date).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    expect(config.assets).toEqual({ directory: './dist', not_found_handling: '404-page' });
+    expect(config.workers_dev).toBe(true);
+    expect(config.preview_urls).toBe(true);
+    // 只有靜態資源：沒有 Worker 程式、不綁帳號、不放變數、沒有任何 binding；正式網域在之後的 ticket 才加。
+    // 用白名單：多了任何設定鍵（例如 main、account_id、vars、route、routes、env）都會失敗。
+    expect(Object.keys(config).sort()).toEqual(['$schema', 'assets', 'compatibility_date', 'name', 'preview_urls', 'workers_dev']);
+  });
+});

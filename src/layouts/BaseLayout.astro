@@ -4,13 +4,15 @@
  * 並放上導覽、頁尾與包住主要內容的 <main>。
  *
  * 為了讓回應標頭的 CSP 維持只允許同源：
- * - 這裡與所有元件都不寫 <script>（JSON-LD 除外）、不用 style 屬性。
+ * - 這裡與所有元件都不寫行內 <script>（JSON-LD 除外）、不用 style 屬性。
  * - 樣式只從外部樣式檔載入。
+ * - 唯一的外部腳本是 Cloudflare Web Analytics，在 </body> 前輸出；token 未填時不輸出。
  */
 import '../styles/global.css';
 import SiteFooter from '../components/SiteFooter.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import { site } from '../data/site';
+import { buildAnalyticsBeacon } from '../lib/analytics';
 import { buildPageMeta, serializeJsonLd, type HtmlLang, type JsonLd } from '../lib/seo';
 
 interface Props {
@@ -28,6 +30,7 @@ interface Props {
 
 const { title, description, lang = 'zh-Hant-TW', noindex = false, jsonLd = [] } = Astro.props;
 const meta = buildPageMeta(site, { title, description, path: Astro.url.pathname, lang, noindex });
+const beacon = buildAnalyticsBeacon(site);
 ---
 
 <!doctype html>
@@ -54,5 +57,7 @@ const meta = buildPageMeta(site, { title, description, path: Astro.url.pathname,
       <slot />
     </main>
     <SiteFooter />
+    {/* is:inline 讓 Astro 照原樣輸出這個外部腳本，不打包、不改寫成行內程式碼。 */}
+    {beacon && <script is:inline defer src={beacon.src} data-cf-beacon={beacon.dataCfBeacon}></script>}
   </body>
 </html>

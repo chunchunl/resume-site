@@ -55,6 +55,12 @@ export const ALLOWED_FINDINGS: readonly AllowedFinding[] = [
     match: '127.0.0.1',
     reason: '產生 PDF 時在本機起的靜態服務只綁回送位址；不是版本號，也不是對外主機。',
   },
+  ...['public/_headers', 'dist/_headers', 'tests/dist/base.test.ts'].map((file) => ({
+    file,
+    rule: 'cloud-default-host',
+    match: 'subdomain.workers.dev',
+    reason: '預覽網址不收錄的 _headers 規則用 Cloudflare 官方文件的萬用寫法（:subdomain 是佔位符），不是實際的預覽網址。',
+  })),
 ];
 
 /** 不掃描的檔案（完整相對路徑）。 */

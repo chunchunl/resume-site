@@ -5,6 +5,43 @@ import { isSitePath as isSameSitePath, listDistFiles, listHtmlFiles, readDist } 
 
 const ONE_YEAR_IN_SECONDS = 31_536_000;
 
+/**
+ * Cloudflare Web Analytics 的腳本網址（官方手動嵌入的寫法）。
+ * 刻意在測試裡自己寫一份、不讀實作的常數：實作的網址寫錯時測試才擋得到。
+ */
+const ANALYTICS_SCRIPT_URL = 'https://static.cloudflareinsights.com/beacon.min.js';
+
+/** 預覽網址的 _headers 規則（Cloudflare 官方文件的寫法，對應每個 workers.dev 網址）。 */
+const PREVIEW_HOST_RULE = 'https://:version.:subdomain.workers.dev/*';
+
+/** 會讓瀏覽器載入檔案的元素（canonical 只是宣告網址，不會被載入，所以不算）。 */
+const RESOURCE_SELECTOR = [
+  'script[src]',
+  'link[href]:not([rel="canonical"])',
+  'img[src]',
+  '[srcset]',
+  'iframe[src]',
+  'source[src]',
+  'video[src]',
+  'audio[src]',
+  'embed[src]',
+  'object[data]',
+  'image[href]',
+  'use[href]',
+].join(', ');
+
+/**
+ * 取出一個元素會載入的全部網址；`srcset` 拆成每個候選圖的網址。
+ * @param attr 讀取該元素屬性的函式，例如 `(name) => $(element).attr(name)`。
+ */
+function resourceUrls(attr: (name: string) => string | undefined): string[] {
+  const urls = ['src', 'href', 'data'].map(attr).filter((url): url is string => url !== undefined);
+  const srcset = attr('srcset');
+  if (srcset) urls.push(...srcset.split(',').map((candidate) => candidate.trim().split(/\s+/)[0] ?? ''));
+  // SVG 的 <use href="#id"> 指向同一份文件，不是外部資源。
+  return urls.filter((url) => !url.startsWith('#'));
+}
+
 /** 把 CSP 字串拆成「指令名稱 → 來源清單」。 */
 function parseCsp(value: string): Map<string, string[]> {
   const directives = new Map<string, string[]>();
@@ -18,6 +55,7 @@ function parseCsp(value: string): Map<string, string[]> {
 /**
  * 解析 _headers：沒有縮排的一行是路徑規則，底下縮排的行是那條規則的標頭。
  * 回傳「路徑規則 → （小寫標頭名稱 → 值）」。
+ * 同一個路徑規則出現兩次會直接丟錯：不然後面那段會蓋掉前面那段，測試就看不到前面加的標頭。
  */
 function parseHeadersFile(content: string): Map<string, Map<string, string>> {
   const blocks = new Map<string, Map<string, string>>();
@@ -26,8 +64,10 @@ function parseHeadersFile(content: string): Map<string, Map<string, string>> {
   for (const line of content.split('\n')) {
     if (line.trim() === '' || line.trim().startsWith('#')) continue;
     if (!/^\s/.test(line)) {
+      const rule = line.trim();
+      if (blocks.has(rule)) throw new Error(`_headers 的路徑規則重複：${rule}`);
       current = new Map();
-      blocks.set(line.trim(), current);
+      blocks.set(rule, current);
       continue;
     }
     const separator = line.indexOf(':');
@@ -97,7 +137,8 @@ describe('dist 基本檢查', () => {
         ...$('img[src]').toArray().map((element) => $(element).attr('src')),
       ];
 
-      for (const url of resources) {
+      // 唯一的例外是流量統計，由下一條測試逐項檢查。
+      for (const url of resources.filter((resource) => resource !== ANALYTICS_SCRIPT_URL)) {
         expect(isSameSitePath(url), `${file} 載入了本站以外的資源：${url}`).toBe(true);
       }
     }
@@ -105,6 +146,32 @@ describe('dist 基本檢查', () => {
     const stylesheet = cheerio.load(readDist('index.html'))('link[rel="stylesheet"]').attr('href');
     expect(isSameSitePath(stylesheet)).toBe(true);
     expect(stylesheet).toMatch(/\.css$/);
+  });
+
+  it('dist 外部資源只有流量統計', () => {
+    expect(listHtmlFiles().length).toBeGreaterThan(0);
+
+    for (const file of listHtmlFiles()) {
+      const $ = cheerio.load(readDist(file));
+      const external = $(RESOURCE_SELECTOR)
+        .toArray()
+        .flatMap((element) => resourceUrls((name) => $(element).attr(name)).map((url) => ({ tag: 'tagName' in element ? element.tagName : '', url })))
+        .filter(({ url }) => !isSameSitePath(url));
+
+      expect(external.filter(({ url }) => url !== ANALYTICS_SCRIPT_URL), `${file} 有流量統計以外的外部資源`).toEqual([]);
+      expect(external.every(({ tag }) => tag === 'script'), `${file} 用 script 以外的元素載入流量統計`).toBe(true);
+
+      const beacons = $(`script[src="${ANALYTICS_SCRIPT_URL}"]`);
+      // 與 check:content 的判斷一致：null、空字串、只有空白都算沒填。
+      const token = site.analyticsToken?.trim();
+      if (!token) {
+        expect(beacons, `${file} token 未填時不應輸出流量統計`).toHaveLength(0);
+        continue;
+      }
+      expect(beacons, `${file} 流量統計數量`).toHaveLength(1);
+      expect(beacons.attr('defer'), `${file} 流量統計沒有 defer`).toBeDefined();
+      expect(JSON.parse(beacons.attr('data-cf-beacon') ?? ''), `${file} 流量統計 token`).toEqual({ token });
+    }
   });
 
   it('dist 沒有 data: 內嵌資源', () => {
@@ -134,17 +201,39 @@ describe('dist 基本檢查', () => {
       expect(permissions).toContain(feature);
     }
 
+  });
+
+  it('_headers CSP 只多允許流量統計', () => {
+    const headers = parseHeadersFile(readDist('_headers')).get('/*');
     const csp = parseCsp(headers?.get('content-security-policy') ?? '');
-    expect(csp.get('default-src')).toEqual(["'self'"]);
-    expect(csp.get('frame-ancestors')).toEqual(["'none'"]);
-    // 目前沒有任何外部來源；之後要加流量統計時，在這裡明確放寬。
-    expect(csp.get('script-src')).toEqual(["'self'"]);
-    expect(csp.get('style-src')).toEqual(["'self'"]);
-    for (const sources of csp.values()) {
-      expect(sources).not.toContain("'unsafe-inline'");
-      expect(sources).not.toContain("'unsafe-eval'");
-      expect(sources).not.toContain('*');
-    }
+
+    // 整張比對：多一個、少一個或改了任何指令都會失敗。
+    // 唯一的外部來源是 Cloudflare Web Analytics 的腳本（script-src）與回報網址（connect-src）。
+    expect(Object.fromEntries(csp)).toEqual({
+      'default-src': ["'self'"],
+      'script-src': ["'self'", 'https://static.cloudflareinsights.com'],
+      'style-src': ["'self'"],
+      'img-src': ["'self'"],
+      'font-src': ["'self'"],
+      'connect-src': ["'self'", 'https://cloudflareinsights.com'],
+      'object-src': ["'none'"],
+      'base-uri': ["'self'"],
+      'form-action': ["'none'"],
+      'frame-ancestors': ["'none'"],
+      'upgrade-insecure-requests': [],
+    });
+  });
+
+  it('_headers 預覽網址不收錄', () => {
+    const blocks = parseHeadersFile(readDist('_headers'));
+    const preview = blocks.get(PREVIEW_HOST_RULE);
+
+    expect(preview, `缺少 ${PREVIEW_HOST_RULE} 規則`).toBeDefined();
+    expect(preview?.get('x-robots-tag')).toBe('noindex');
+
+    // 其他規則（包括 /* 與任何路徑規則）都不能帶不收錄，正式網域才不會被擋在搜尋引擎外。
+    const others = [...blocks].filter(([rule, headers]) => rule !== PREVIEW_HOST_RULE && headers.has('x-robots-tag')).map(([rule]) => rule);
+    expect(others, '預覽網址以外的規則帶了 X-Robots-Tag').toEqual([]);
   });
 
   it('dist 沒有 source map', () => {

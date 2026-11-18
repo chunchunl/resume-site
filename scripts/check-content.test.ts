@@ -7,9 +7,16 @@ const completeSite = {
   links: { github: 'https://example.com/a', linkedin: 'https://example.com/b' },
   contactEmails: { work: 'work@example.com', jobs: 'jobs@example.com' },
   avatar: null,
+  analyticsToken: 'fake-token',
 };
 
 describe('check-content', () => {
+  it('check-content 流量統計 token 未填會失敗', () => {
+    const site = { ...completeSite, analyticsToken: null };
+
+    expect(checkRequiredFields(site, { ignore: ['avatar'] }).missing).toEqual(['analyticsToken']);
+  });
+
   it('check-content 欄位未填會失敗', () => {
     const site = { ...completeSite, contactEmails: { work: null, jobs: 'jobs@example.com' } };
 

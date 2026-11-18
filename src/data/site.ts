@@ -31,6 +31,11 @@ export interface Site {
   };
   /** 頭像圖檔路徑；還沒有圖時為 `null`。 */
   avatar: string | null;
+  /**
+   * Cloudflare Web Analytics 的站台 token（公開值，每頁的 HTML 都會出現）。
+   * 還沒建站台時為 `null`，頁面不輸出流量統計；正式部署前 `check:content` 會擋。
+   */
+  analyticsToken: string | null;
 }
 
 /** 網站身分目前的值。 */
@@ -50,4 +55,5 @@ export const site: Site = {
     jobs: 'jobs@lin-yu-chun.com',
   },
   avatar: null,
+  analyticsToken: null,
 };
