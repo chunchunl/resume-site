@@ -203,7 +203,7 @@ export function buildHome(facts: Facts, site: Site): HomeContent {
       {
         title: '個人 AI 知識平台（RAG）',
         href: '/work/personal-rag-knowledge-platform/',
-        summary: '自行維護的知識問答助理。從「AI 回答過時」追查到資料同步問題並完成修正，也將使用權限限定為本人。',
+        summary: '我的個人知識庫，收集工作上容易忘記的細節，可隨時以自然語言查詢；僅限本人使用。',
         role: '獨立負責問題定義、方案取捨與驗收',
         tech: ['Cloudflare Workers AI', 'Vectorize', 'D1', 'R2', 'LINE Messaging API', 'Cloudflare Access'],
         results: [

@@ -19,7 +19,7 @@ export function buildCase(facts: Facts): CaseContent {
     lang: 'zh-TW',
     order: 3,
     title: '個人 AI 知識平台（RAG）',
-    summary: '自行維護的知識問答助理。從「AI 回答過時」追查到資料同步問題並完成修正，也將使用權限限定為本人。',
+    summary: '我的個人知識庫，收集工作上容易忘記的專案決策、會議結論與技術細節，可隨時以自然語言提問查詢；僅限本人使用。',
     period: '2026-07 至今',
     role: '個人專案；問題定義、方案取捨、驗收',
     tech: ['Cloudflare Workers AI', 'Vectorize', 'D1', 'R2', 'LINE Messaging API', 'Cloudflare Access'],
@@ -28,7 +28,8 @@ export function buildCase(facts: Facts): CaseContent {
       {
         heading: '此平台的用途為何？',
         paragraphs: [
-          '此平台是供本人使用的知識問答助理。個人筆記更新後會自動同步，切分為段落並建立向量索引；提問時先找出相關段落，再交由語言模型整理成回答。',
+          '這是我的個人知識庫，收集工作上容易忘記的專案決策、會議結論與技術細節，可隨時以自然語言提問查詢。',
+          '個人筆記更新後會自動同步，切分為段落並建立向量索引；提問時先找出相關段落，再交由語言模型整理成回答。',
           '可透過 LINE 或網站提問，兩個入口均僅限本人使用。負責同步的自動化程式也持有專屬的通行憑證。',
         ],
         diagram: 'rag-data-flow',
