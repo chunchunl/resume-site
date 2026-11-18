@@ -61,6 +61,13 @@ export const ALLOWED_FINDINGS: readonly AllowedFinding[] = [
     match: 'subdomain.workers.dev',
     reason: '預覽網址不收錄的 _headers 規則用 Cloudflare 官方文件的萬用寫法（:subdomain 是佔位符），不是實際的預覽網址。',
   })),
+  {
+    file: 'src/data/site.ts',
+    rule: 'secret-assignment',
+    // 換 token 時要同步改這裡，否則 scan:sensitive 會擋下部署。
+    match: "Token: 'd005d797bda744988369eec7804f8e3c",
+    reason: 'Web Analytics 站台 token 是公開值，每個頁面的 HTML 都會出現。',
+  },
 ];
 
 /** 不掃描的檔案（完整相對路徑）。 */

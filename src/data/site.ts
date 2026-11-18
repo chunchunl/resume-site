@@ -55,5 +55,5 @@ export const site: Site = {
     jobs: 'jobs@lin-yu-chun.com',
   },
   avatar: null,
-  analyticsToken: null,
+  analyticsToken: 'd005d797bda744988369eec7804f8e3c',
 };
