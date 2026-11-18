@@ -1,7 +1,7 @@
 /**
  * 隱私頁內容：網站不用 cookie、流量統計怎麼做、來信怎麼處理、資料在哪裡處理、信件怎麼保存與刪除。
- * 頁面上的承諾以 spec 為準。保存原則與境外處理兩句是上線前個資初審的補件，
- * 寫法經 Erica 同意；保存原則是對來信者的承諾，只寫原則、不寫固定天數，改寫法要先問 Erica。
+ * 頁面上的承諾以 spec 為準。來信用途、保存原則與境外處理三句是上線前個資初審的補件，
+ * 寫法經 Erica 同意；用途與保存原則是對來信者的承諾（保存只寫原則、不寫固定天數），改寫法要先問 Erica。
  */
 import { siteFullName } from '../lib/seo';
 import { siteEmails, type HomeEmail } from './home';
@@ -54,7 +54,7 @@ export function buildPrivacy(site: Site): PrivacyContent {
       {
         heading: '寫信給我',
         paragraphs: [
-          '寫信到下面的公開信箱時，信件會經過 Cloudflare 的轉寄服務送到我的信箱。信件內容只用於回覆該次洽詢。',
+          '寫信到下面的公開信箱時，信件會經過 Cloudflare 的轉寄服務送到我的信箱。信件內容只用於回覆洽詢與後續的合作往來。',
         ],
       },
       {

@@ -10,6 +10,9 @@ const RETENTION_SENTENCE =
 /** 境外處理說明（Erica 同意的寫法，刻意寫在測試裡，不讀實作常數）。 */
 const CROSS_BORDER_SENTENCE = '流量統計與信件轉寄由 Cloudflare 提供，相關資料可能在台灣以外的地區處理。';
 
+/** 來信用途（Erica 同意的寫法，刻意寫在測試裡，不讀實作常數）。 */
+const PURPOSE_SENTENCE = '信件內容只用於回覆洽詢與後續的合作往來。';
+
 /** 接案信箱還沒定案的假身分資料。 */
 const siteWithoutWorkEmail: Site = { ...site, contactEmails: { ...site.contactEmails, work: null } };
 
@@ -26,7 +29,7 @@ describe('buildPrivacy', () => {
   it('buildPrivacy 涵蓋 spec 的四項說明', () => {
     const text = collectStrings(buildPrivacy(site)).join('\n');
 
-    // 不用 cookie、沒有其他追蹤碼、來信只用於回覆該次洽詢、信件經 Cloudflare 轉寄。
+    // 不用 cookie、沒有其他追蹤碼、來信只用於回覆洽詢與後續的合作往來、信件經 Cloudflare 轉寄。
     expect(text).toMatch(/不使用 cookie/);
     expect(text).toContain('追蹤碼');
     expect(text).toContain('只用於回覆');
@@ -43,6 +46,9 @@ describe('buildPrivacy', () => {
     expect(text).toContain('除了下面的流量統計');
     expect(text).toContain('依 Cloudflare 的說明');
     expect(text).not.toContain('也不追蹤個別訪客');
+    // 成立合作的信件會依合約與報稅保存，用途不能只寫「回覆該次洽詢」；改寫法要先問 Erica（這是對來信者的承諾）。
+    expect(text).toContain(PURPOSE_SENTENCE);
+    expect(text).not.toContain('該次洽詢');
   });
 
   it('buildPrivacy 寫明來信保存原則', () => {
