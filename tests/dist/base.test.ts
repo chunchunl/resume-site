@@ -202,6 +202,22 @@ describe('dist 基本檢查', () => {
     });
   });
 
+  it('dist 導覽列捲動時固定在頂端', () => {
+    const href = cheerio.load(readDist('index.html'))('link[rel="stylesheet"]').attr('href') ?? '';
+    const css = readDist(href.slice(1));
+
+    // 只看單獨的 .site-header 規則；列印樣式把它和其他選擇器寫在一起隱藏，不算。
+    const header = /(?:^|[}\s])\.site-header\{([^}]*)\}/.exec(css)?.[1] ?? '';
+    expect(header, '.site-header 沒有 position: sticky').toMatch(/(?:^|;)position:sticky(?:;|$)/);
+    expect(header, '.site-header 沒有貼齊頂端').toMatch(/(?:^|;)top:0(?:;|$)/);
+    // 導覽列有背景色，捲動時內容才不會透出來。
+    expect(header).toMatch(/(?:^|;)background:/);
+
+    // 跳到頁內位置（例如「跳到主要內容」）時，目標不能被固定的導覽列蓋住。
+    const htmlRules = [...css.matchAll(/(?:^|[}\s])html\{([^}]*)\}/g)].map((match) => match[1] ?? '').join(';');
+    expect(htmlRules, 'html 沒有 scroll-padding-top').toMatch(/scroll-padding-top:/);
+  });
+
   it('_headers 預覽網址不收錄', () => {
     const blocks = parseHeadersFile(readDist('_headers'));
     const preview = blocks.get(PREVIEW_HOST_RULE);

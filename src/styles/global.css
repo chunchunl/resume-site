@@ -66,6 +66,15 @@ html {
   background: var(--color-bg);
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  /* 導覽列固定在頂端；跳到頁內位置時預留它的高度，目標才不會被蓋住。
+     數值依實測導覽列高度（手機換行時約 93px、48rem 以上約 57px）再多留一點；改導覽列高度時要同步調整。 */
+  scroll-padding-top: 6.5rem;
+}
+
+@media (min-width: 48rem) {
+  html {
+    scroll-padding-top: 4.5rem;
+  }
 }
 
 body {
@@ -142,7 +151,11 @@ a:hover {
 
 /* ---------- 導覽 ---------- */
 
+/* 捲動時導覽列固定在頂端；有背景色，底下的內容才不會透出來。 */
 .site-header {
+  position: sticky;
+  top: 0;
+  z-index: 5;
   border-bottom: 1px solid var(--color-border);
   background: var(--color-bg);
 }
