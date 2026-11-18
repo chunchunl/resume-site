@@ -49,6 +49,7 @@ tests/fixtures/       測試用的虛構資料
 
 - **數字或上線狀態改了**：只改 `src/data/facts.ts`。各頁文字與結構化資料都讀這個檔，不會出現兩處數字不一致。這個檔不放日期與版本號。
 - **姓名、職稱、連結、公開信箱改了**：只改 `src/data/site.ts`。還沒提供的欄位填 `null`，頁面不會輸出那個連結，`npm run check:content` 會提醒還沒填。
+- **姓名、職稱或副標改了**：除了 `site.ts`，還要重產讀這些值的檔案：`npm run build:og`（分享預覽圖）與 `npm run build:pdf`（PDF 履歷）。網站配色改了也要重產預覽圖。
 - **改完之後**：執行 `npm run verify`，全部通過再 commit。
 
 ## 這個 repo 不放的東西

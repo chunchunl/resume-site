@@ -110,7 +110,29 @@ describe('buildPageMeta', () => {
       robots: null,
       ogSiteName: '林昱均 Erica Lin',
       ogLocale: 'zh_TW',
+      ogImage: {
+        url: 'https://lin-yu-chun.com/og/erica-lin-og.png',
+        width: 1200,
+        height: 630,
+        alt: '林昱均 Erica Lin｜產品導向前端工程師',
+      },
     });
+  });
+
+  it('buildPageMeta 帶預覽圖', () => {
+    const meta = buildPageMeta(fullSite, { title: 't', description: 'd', path: '/work/' });
+
+    expect(meta.ogImage.url).toBe(new URL('/og/erica-lin-og.png', fullSite.url).href);
+    expect(meta.ogImage.width).toBe(1200);
+    expect(meta.ogImage.height).toBe(630);
+    expect(meta.ogImage.alt).toContain(siteFullName(fullSite));
+  });
+
+  it('buildPageMeta noindex 也帶預覽圖', () => {
+    const meta = buildPageMeta(fullSite, { title: 't', description: 'd', path: '/404/', noindex: true });
+
+    expect(meta.canonical).toBeNull();
+    expect(meta.ogImage.url).toBe(new URL('/og/erica-lin-og.png', fullSite.url).href);
   });
 
   it('buildPageMeta 首頁的 canonical 以斜線結尾', () => {

@@ -21,6 +21,7 @@
     "scan:sensitive": "tsx scripts/scan-sensitive.ts",
     "check:production": "tsx scripts/check-production.ts",
     "build:pdf": "tsx scripts/build-pdf.ts",
+    "build:og": "tsx scripts/build-og-image.ts",
     "verify": "npm run typecheck && npm run lint && npm run test && npm run check:facts && npm run build && npm run test:dist && npm run scan:sensitive",
     "deploy": "npm run check:content && npm run verify && wrangler deploy"
   },

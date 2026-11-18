@@ -35,11 +35,41 @@ export interface PageMeta {
   ogSiteName: string;
   /** Open Graph 的語系代碼。 */
   ogLocale: 'zh_TW' | 'en_US';
+  /** 分享預覽圖（LinkedIn、LINE、Facebook 等平台抓取）。 */
+  ogImage: OgImageMeta;
 }
+
+/** 分享預覽圖的 meta 值。 */
+export interface OgImageMeta {
+  /** 圖片的正式網址（絕對網址）。 */
+  url: string;
+  /** 寬度（px）。 */
+  width: number;
+  /** 高度（px）。 */
+  height: number;
+  /** 替代文字。 */
+  alt: string;
+}
+
+/**
+ * 全站共用的分享預覽圖：站內路徑與尺寸。
+ * 圖檔由 `npm run build:og` 產生到 `public/` 底下；改了尺寸要重產圖。
+ */
+export const OG_IMAGE = { path: '/og/erica-lin-og.png', width: 1200, height: 630 } as const;
 
 /** 把站內路徑轉成正式網址。 */
 function absoluteUrl(site: Site, path: string): string {
   return new URL(path, site.url).href;
+}
+
+/** 產生分享預覽圖的 meta 值；不收錄的頁面也帶，分享時一樣有圖。 */
+function buildOgImageMeta(site: Site): OgImageMeta {
+  return {
+    url: absoluteUrl(site, OG_IMAGE.path),
+    width: OG_IMAGE.width,
+    height: OG_IMAGE.height,
+    alt: `${siteFullName(site)}｜${site.jobTitle}`,
+  };
 }
 
 /** 網站顯示用的全名：中文姓名加英文名。 */
@@ -100,6 +130,7 @@ export function buildPageMeta(site: Site, page: PageMetaInput): PageMeta {
     robots: noindex ? 'noindex' : null,
     ogSiteName: siteFullName(site),
     ogLocale: page.lang === 'en' ? 'en_US' : 'zh_TW',
+    ogImage: buildOgImageMeta(site),
   };
 }
 
