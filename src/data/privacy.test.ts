@@ -3,6 +3,13 @@ import { collectStrings, writingRuleViolations } from './cases/test-utils';
 import { buildPrivacy } from './privacy';
 import { site, type Site } from './site';
 
+/** 來信保存原則（Erica 同意的寫法，刻意寫在測試裡，不讀實作常數）。 */
+const RETENTION_SENTENCE =
+  '洽詢結束、不再需要聯絡時，我會刪除信件；成立合作的往來信件，依合約與報稅需要保存。';
+
+/** 境外處理說明（Erica 同意的寫法，刻意寫在測試裡，不讀實作常數）。 */
+const CROSS_BORDER_SENTENCE = '流量統計與信件轉寄由 Cloudflare 提供，相關資料可能在台灣以外的地區處理。';
+
 /** 接案信箱還沒定案的假身分資料。 */
 const siteWithoutWorkEmail: Site = { ...site, contactEmails: { ...site.contactEmails, work: null } };
 
@@ -38,10 +45,22 @@ describe('buildPrivacy', () => {
     expect(text).not.toContain('也不追蹤個別訪客');
   });
 
-  it('buildPrivacy 不寫保存期間', () => {
+  it('buildPrivacy 寫明來信保存原則', () => {
     const text = collectStrings(buildPrivacy(site)).join('\n');
 
-    expect(text).not.toMatch(/保存|保留|\d+\s*(?:天|日|週|個月|月|年)/);
+    // 上線前個資初審補件，Erica 同意的原文；改寫法要先問 Erica（這是對來信者的承諾）。
+    expect(text).toContain(RETENTION_SENTENCE);
+    // 來信者要求刪除的方法不能悄悄消失（標題與保存原則都含「刪除」，只查這兩個字擋不住）。
+    expect(text).toContain('如果想刪除寄給我的信件，請寫信到同一個信箱告訴我。');
+    // 只寫保存原則，不承諾固定天數；阿拉伯數字與國字數字都算。
+    expect(text).not.toMatch(/[\d一二三四五六七八九十百兩半]+\s*(?:天|日|週|個月|月|年)/);
+  });
+
+  it('buildPrivacy 說明資料可能在境外處理', () => {
+    const text = collectStrings(buildPrivacy(site)).join('\n');
+
+    // 上線前個資初審補件，Erica 同意的原文：流量統計與信件轉寄都由 Cloudflare 處理。
+    expect(text).toContain(CROSS_BORDER_SENTENCE);
   });
 
   it('buildPrivacy 標題與文案規則', () => {
