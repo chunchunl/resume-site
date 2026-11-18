@@ -26,6 +26,13 @@ describe('dist RAG 案例頁', () => {
     expect(text).toContain(formatRatio(facts.rag.evalAfter, 'zh-TW'));
   });
 
+  it('dist RAG 案例頁不寫存取控制的機制細節', () => {
+    // 含資料流圖的 SVG 文字；Erica 2026-11-18：只寫只給本人用，不寫名單、預設拒絕這類機制。
+    const html = loadCasePage(SLUG).html();
+
+    expect(html).not.toMatch(/白名單|預設拒絕|名單以外/);
+  });
+
   it('dist RAG 案例不誇大也不露出子網域', () => {
     const text = mainTextWithFaq(loadCasePage(SLUG));
 

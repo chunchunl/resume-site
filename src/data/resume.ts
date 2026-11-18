@@ -44,8 +44,6 @@ export interface ResumeContent {
     skills: string;
     /** 學歷與培訓。 */
     education: string;
-    /** 可到職時間。 */
-    availability: string;
   };
   /** 專業摘要。 */
   summary: string;
@@ -55,8 +53,6 @@ export interface ResumeContent {
   skills: SkillGroup[];
   /** 學歷與培訓，新的在前。 */
   education: ResumeEntry[];
-  /** 可到職時間的一句話。 */
-  availability: string;
   /** 下載 PDF 的連結。 */
   download: {
     /** 連結文字。 */
@@ -170,7 +166,6 @@ export function buildResume(facts: Facts, site: Site): ResumeContent {
       experience: '工作經歷',
       skills: '技能',
       education: '學歷與培訓',
-      availability: '可到職時間',
     },
     summary:
       '我是有視覺設計背景的前端工程師，主要用 React 開發會員平台與企業內部系統。我參與庫存、會員獎勵、活動報名與權限等跨系統功能，能從需求釐清、介面設計、API 串接一路做到 DEV／UAT 驗證。近期我也擴展到資料庫、後端 API、排程與 AI 應用。',
@@ -201,7 +196,6 @@ export function buildResume(facts: Facts, site: Site): ResumeContent {
     ],
     skills: SKILLS,
     education: EDUCATION,
-    availability: '我可以在 2027 年 3 月到職。',
     download: { label: '下載 PDF 履歷', href: RESUME_PDF_HREF },
     contact: { email: site.contactEmails.jobs, url: site.url },
   };

@@ -19,7 +19,7 @@ export function buildCase(facts: Facts): CaseContent {
     lang: 'zh-TW',
     order: 3,
     title: '個人 AI 知識平台（RAG）',
-    summary: '自己維護的知識問答助理。我從「AI 回答過時」一路追到資料同步與存取控制問題，並把它們修好。',
+    summary: '自己維護的知識問答助理。我從「AI 回答過時」追到資料同步的問題並修好，也讓它只開放給我自己使用。',
     period: '2026-07 至今',
     role: '個人專案；問題定義、方案取捨、驗收',
     tech: ['Cloudflare Workers AI', 'Vectorize', 'D1', 'R2', 'LINE Messaging API', 'Cloudflare Access'],
@@ -36,9 +36,9 @@ export function buildCase(facts: Facts): CaseContent {
       {
         heading: 'AI 為什麼會回答過時的內容？',
         paragraphs: [
-          '有一段時間，它的回答明顯是舊的。我從「回答過時」往回追，發現自動同步已經失敗了一段時間：同步程式和接收端的認證設定不一致，請求一直被拒絕，卻沒有任何警告。',
+          '有一段時間，它的回答明顯是舊的。我從「回答過時」往回追，發現自動同步因為兩端設定不一致，已經停了一段時間。',
           '另一個原因是模型不知道今天的日期，也不知道每段資料是什麼時候寫的，所以分不出新舊。',
-          `我重新設定兩端的認證，全量重建${chunks}索引段落，並補上今天與資料的日期資訊。`,
+          `我重新對齊兩端的設定，全量重建${chunks}索引段落，並補上今天與資料的日期資訊。`,
         ],
       },
       {
@@ -51,16 +51,15 @@ export function buildCase(facts: Facts): CaseContent {
       {
         heading: '怎麼限制只有本人能用？',
         paragraphs: [
-          'LINE 入口原本只確認訊息真的來自 LINE，沒有檢查提問的人是誰。',
-          '我改成只允許指定的使用者，名單沒有設定時一律拒絕。網站加上 Cloudflare Access 登入，同步程式與 LINE 各自只開放需要的路徑。',
-          '改完後，我從外部未登入的狀態逐一測試每個入口，確認都被擋下。',
+          'LINE 入口只回應我自己的帳號，網站要先通過 Cloudflare Access 登入。',
+          '設定完成後，我從外部未登入的狀態逐一測試每個入口，確認都被擋下。',
         ],
       },
     ],
     results: [
-      `追出同步管線靜默失敗的原因，重建${chunks}索引段落並補上日期資訊`,
+      `找出同步中斷的原因，重建${chunks}索引段落並補上日期資訊`,
       `固定評估題組由 ${evalBefore}提升到 ${evalAfter}`,
-      'LINE 入口改成使用者白名單、預設拒絕，網站加上 Cloudflare Access',
+      'LINE 與網站兩個入口都只開放給我自己，網站使用 Cloudflare Access',
       '從外部逐一驗證每個入口的存取控制',
     ],
     faq: [
@@ -71,7 +70,7 @@ export function buildCase(facts: Facts): CaseContent {
       },
       {
         question: 'AI 回答過時的原因是什麼？',
-        answer: `有兩個原因：自動同步因為認證設定不一致而失敗，卻沒有發出警告；模型也不知道今天與資料的日期。我修正認證、重建${chunks}索引段落，並補上日期資訊。`,
+        answer: `有兩個原因：自動同步因為兩端設定不一致而中斷；模型也不知道今天與資料的日期。我對齊設定、重建${chunks}索引段落，並補上日期資訊。`,
       },
       {
         question: '怎麼判斷修好了？',
@@ -79,10 +78,10 @@ export function buildCase(facts: Facts): CaseContent {
       },
       {
         question: '別人可以使用這個平台嗎？',
-        answer: '不行。LINE 入口只允許指定的使用者，網站要通過 Cloudflare Access 登入，名單以外一律拒絕。',
+        answer: '不行。LINE 入口只回應我自己的帳號，網站要通過 Cloudflare Access 登入。',
       },
     ],
     aiNote:
-      'AI 協助排查、實作與部署。問題定義、方案取捨與驗收由我負責，包括判斷資料流哪裡出錯、評估題組怎麼設計，以及存取控制要擋住哪些路徑。',
+      'AI 協助排查、實作與部署。問題定義、方案取捨與驗收由我負責，包括判斷資料流哪裡出錯、評估題組怎麼設計，以及存取控制怎麼驗證。',
   };
 }

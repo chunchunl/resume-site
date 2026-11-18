@@ -198,6 +198,15 @@ describe('buildHome', () => {
     expect(JSON.stringify(home)).not.toContain('null');
   });
 
+  it('buildHome RAG 卡片不描述修正前的弱點', () => {
+    const rag = buildHome(factsA, fullSite).cases.find((item) => item.href === '/work/personal-rag-knowledge-platform/');
+    const text = fullText(rag);
+
+    expect(rag).toBeDefined();
+    // Erica 2026-11-18：只寫現在怎麼保護，不寫修正前哪裡沒擋。
+    expect(text).not.toMatch(/沒有限制|沒有檢查|預設拒絕|白名單|靜默|存取控制問題/);
+  });
+
   it('buildHome 文案不用破折號，也不寫延後公開的內容', () => {
     const text = fullText(buildHome(factsA, fullSite));
 

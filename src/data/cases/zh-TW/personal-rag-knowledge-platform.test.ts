@@ -120,6 +120,18 @@ describe('個人 AI 知識平台案例', () => {
     expect(text).not.toMatch(/[A-Z][A-Z0-9]*_[A-Z0-9_]+/);
   });
 
+  it('rag buildCase 不描述修正前的弱點', () => {
+    const text = visibleStrings(buildCase(facts)).join('\n');
+
+    // Erica 2026-11-18：案例只寫現在怎麼保護，不寫修正前哪裡沒擋、也不提路徑層級的例外。
+    expect(text).not.toMatch(/沒有檢查|沒有限制|原本只|名單沒有設定|預設拒絕|只開放需要的路徑|擋住哪些路徑/);
+    // 同步中斷是運作問題，可以寫，但不用「靜默失敗」「沒有任何警告」強調監控缺口。
+    expect(text).not.toMatch(/靜默|沒有任何警告|沒有發出警告/);
+    // 仍要說明入口只給本人用，並從外部驗證過。
+    expect(text).toContain('Cloudflare Access');
+    expect(text).toMatch(/從外部[^。]*(測試|驗證)/);
+  });
+
   it('rag buildCase 文案符合公開寫作規則', () => {
     expect(writingRuleViolations(visibleStrings(buildCase(facts)))).toEqual([]);
   });

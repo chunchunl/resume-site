@@ -48,7 +48,10 @@ describe('buildResume', () => {
     expect(content.experience[2]?.points).toHaveLength(1);
     expect(content.skills).toHaveLength(4);
     expect(content.education).toHaveLength(3);
-    expect(content.availability).toContain('2027 年 3 月');
+    // Erica 2026-11-18：求職頁不公開可到職時間。
+    expect(content).not.toHaveProperty('availability');
+    expect(content.headings).not.toHaveProperty('availability');
+    expect(collectStrings(content).join('\n')).not.toMatch(/到職/);
   });
 
   it('buildResume 數字跟著 facts 變', () => {

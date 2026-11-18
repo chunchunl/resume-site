@@ -65,7 +65,9 @@ describe('dist 求職頁', () => {
       .map((element) => $(element).attr('data-section'));
     const download = $('main a[href$=".pdf"]');
 
-    expect(sections).toEqual(['summary', 'experience', 'skills', 'education', 'availability']);
+    // Erica 2026-11-18：不公開可到職時間，頁面與 PDF 都沒有這個區塊。
+    expect(sections).toEqual(['summary', 'experience', 'skills', 'education']);
+    expect($('main').text()).not.toMatch(/到職/);
     expect($('h1')).toHaveLength(1);
     expect(download).toHaveLength(1);
     expect(download.attr('href')).toBe(PDF_HREF);
@@ -108,9 +110,10 @@ describe('dist 求職頁', () => {
       ...content.education.flatMap((item) => [item.org, item.role, item.period, ...item.points]),
       ...content.skills.flatMap((group) => [group.name, ...group.items]),
       content.summary,
-      content.availability,
     ];
 
+    // Erica 2026-11-18：PDF 也不公開可到職時間。
+    expect(pdfText).not.toMatch(/到職/);
     expect(expected.length).toBeGreaterThan(20);
     for (const part of expected) {
       // 同一段文字在頁面上也要找得到，這條才是在比「頁面」而不只是比內容函式。

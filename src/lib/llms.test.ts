@@ -104,6 +104,14 @@ const officialText = (): string =>
   buildLlmsTxt({ site, cases: getCases('zh-TW', facts), services: buildServices(site).services });
 
 describe('buildLlmsTxt', () => {
+  it('buildLlmsTxt 不提可到職時間與修正前的弱點', () => {
+    const text = officialText();
+
+    // Erica 2026-11-18：求職頁不公開可到職時間；案例只寫現在怎麼保護。
+    expect(text).not.toMatch(/到職/);
+    expect(text).not.toMatch(/沒有限制|沒有檢查|預設拒絕|靜默/);
+  });
+
   it('buildLlmsTxt 結構', () => {
     const text = officialText();
     const lines = text.split('\n').filter((line) => line.trim() !== '');

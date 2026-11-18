@@ -201,13 +201,13 @@ export function buildHome(facts: Facts, site: Site): HomeContent {
       {
         title: '個人 AI 知識平台（RAG）',
         href: '/work/personal-rag-knowledge-platform/',
-        summary: '自己維護的知識問答助理。我從「AI 回答過時」一路追到資料同步與存取控制問題，並把它們修好。',
+        summary: '自己維護的知識問答助理。我從「AI 回答過時」追到資料同步的問題並修好，也讓它只開放給我自己使用。',
         role: '獨立負責問題定義、方案取捨與驗收',
         tech: ['Cloudflare Workers AI', 'Vectorize', 'D1', 'R2', 'LINE Messaging API', 'Cloudflare Access'],
         results: [
-          `追出同步管線靜默失敗的原因，重建約 ${formatNumber(rag.indexedChunks)} 個索引段落並補上日期資訊`,
+          `找出同步中斷的原因，重建約 ${formatNumber(rag.indexedChunks)} 個索引段落並補上日期資訊`,
           `固定評估題組由 ${formatRatio(rag.evalBefore, 'zh-TW')} 題提升到 ${formatRatio(rag.evalAfter, 'zh-TW')} 題`,
-          '發現 LINE 入口沒有限制使用者身分，改成白名單、預設拒絕，網站也加上存取控制',
+          'LINE 與網站兩個入口都只開放給我自己，並從外部逐一驗證',
         ],
       },
     ],
