@@ -143,11 +143,17 @@ describe('dist 首頁', () => {
     expect(externalLinkCount).toBeGreaterThan(0);
   });
 
-  it('dist 首頁其他作品寫明責任，且不放外部連結', () => {
-    const section = loadHome()('[data-section="other-work"]');
+  it('dist 首頁其他作品寫明責任，且只連到站內案例頁', () => {
+    const $ = loadHome();
+    const section = $('[data-section="other-work"]');
+    const hrefs = section
+      .find('a')
+      .toArray()
+      .map((element) => $(element).attr('href') ?? '');
 
     expect(normalizeText(section.text())).toContain('程式由其他工程師實作');
-    expect(section.find('a')).toHaveLength(0);
+    for (const href of hrefs) expect(href, '其他作品只能連到站內案例頁').toMatch(/^\/work\/[a-z0-9-]+\/$/);
+    expect(hrefs.filter((href) => href === '/work/inventory-system-planning/')).toHaveLength(1);
   });
 
   it('dist 首頁我怎麼工作有三點', () => {
@@ -204,6 +210,7 @@ describe('dist 首頁', () => {
       home.hero.actions.length +
       home.hero.links.length +
       home.cases.length +
+      home.otherWork.filter((item) => item.href !== undefined).length +
       home.contact.emails.length +
       home.contact.links.length;
 

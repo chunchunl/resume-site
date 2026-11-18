@@ -9,6 +9,7 @@ import Breadcrumb from '../../components/Breadcrumb.astro';
 import CaseSummaryTable from '../../components/CaseSummaryTable.astro';
 import EventArchitectureDiagram from '../../components/diagrams/EventArchitectureDiagram.astro';
 import EventFlowDiagram from '../../components/diagrams/EventFlowDiagram.astro';
+import InventoryPlanningFlowDiagram from '../../components/diagrams/InventoryPlanningFlowDiagram.astro';
 import RagDataFlowDiagram from '../../components/diagrams/RagDataFlowDiagram.astro';
 import RewardStateDiagram from '../../components/diagrams/RewardStateDiagram.astro';
 import FaqSection from '../../components/FaqSection.astro';
@@ -34,6 +35,7 @@ const DIAGRAMS: Record<DiagramId, typeof EventFlowDiagram> = {
   'event-architecture': EventArchitectureDiagram,
   'reward-states': RewardStateDiagram,
   'rag-data-flow': RagDataFlowDiagram,
+  'inventory-planning-flow': InventoryPlanningFlowDiagram,
 };
 
 const { content } = Astro.props;

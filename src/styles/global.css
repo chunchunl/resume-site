@@ -464,6 +464,13 @@ a:hover {
   font-size: var(--text-lg);
 }
 
+/* 有案例頁的其他作品：字級與粗細比照代表作卡片底部的案例連結提示（`.case-card__more`）。 */
+.other-list__more {
+  margin-top: var(--space-2);
+  font-size: var(--text-sm);
+  font-weight: 700;
+}
+
 /* ---------- 我怎麼工作 ---------- */
 
 .principle-list {

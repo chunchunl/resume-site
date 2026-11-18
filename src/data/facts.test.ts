@@ -22,6 +22,8 @@ describe('facts', () => {
     expect(isPositiveInteger(facts.eventPlatform.e2eIssuesFixed)).toBe(true);
     expect(isPositiveInteger(facts.rag.indexedChunks)).toBe(true);
     expect(isPositiveInteger(facts.rewardSystem.milestoneVisits)).toBe(true);
+    expect(isPositiveInteger(facts.inventory.alignmentMeetings)).toBe(true);
+    expect(isPositiveInteger(facts.inventory.gapItems)).toBe(true);
 
     for (const ratio of [facts.rag.evalBefore, facts.rag.evalAfter]) {
       expect(isPositiveInteger(ratio.passed)).toBe(true);

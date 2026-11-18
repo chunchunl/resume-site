@@ -40,11 +40,18 @@ describe('案例清單', () => {
 
   it('getCases 順序', () => {
     const slugs = getCases('zh-TW', facts).map((item) => item.slug);
-    const homeHrefs = buildHome(facts, site).cases.map((item) => item.href);
+    const home = buildHome(facts, site);
+    const homeHrefs = home.cases.map((item) => item.href);
 
-    expect(slugs).toEqual(['event-ticketing-platform', 'member-milestone-rewards', 'personal-rag-knowledge-platform']);
-    // 和首頁三張代表作卡片的連結一一對應。
-    expect(slugs.map((slug) => `/work/${slug}/`)).toEqual(homeHrefs);
+    expect(slugs).toEqual([
+      'event-ticketing-platform',
+      'member-milestone-rewards',
+      'personal-rag-knowledge-platform',
+      'inventory-system-planning',
+    ]);
+    // 前三個和首頁三張代表作卡片的連結一一對應；第四個是首頁「其他作品」連過去的規劃案例。
+    expect(slugs.slice(0, 3).map((slug) => `/work/${slug}/`)).toEqual(homeHrefs);
+    expect(`/work/${slugs[3]}/`).toBe(home.otherWork[0]?.href);
   });
 
   it('getCase 用 slug 取得單一案例', () => {

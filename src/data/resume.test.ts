@@ -10,12 +10,14 @@ const factsA: Facts = {
   eventPlatform: { backendTests: 611, frontendTests: 322, loadTestRequests: 2455, e2eIssuesFixed: 13 },
   rewardSystem: { status: 'testing', milestoneVisits: 120 },
   rag: { indexedChunks: 4100, evalBefore: { passed: 11, total: 19 }, evalAfter: { passed: 21, total: 21 } },
+  inventory: { alignmentMeetings: 7, gapItems: 38 },
 };
 
 const factsB: Facts = {
   eventPlatform: { backendTests: 733, frontendTests: 288, loadTestRequests: 3566, e2eIssuesFixed: 27 },
   rewardSystem: { status: 'launched', milestoneVisits: 150 },
   rag: { indexedChunks: 5200, evalBefore: { passed: 9, total: 23 }, evalAfter: { passed: 25, total: 25 } },
+  inventory: { alignmentMeetings: 9, gapItems: 43 },
 };
 
 /** 求職頁會用到的三個事實，在頁面上的寫法。 */

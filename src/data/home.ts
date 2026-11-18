@@ -55,12 +55,14 @@ export interface HomeCase {
   section?: 'reward-system';
 }
 
-/** 一項其他作品（純文字，不放連結）。 */
+/** 一項其他作品（不是代表作卡片；有案例頁的才附連結）。 */
 export interface HomeOtherWork {
   /** 作品名稱。 */
   title: string;
   /** 說明，含我負責的範圍。 */
   description: string;
+  /** 站內案例頁網址；沒有案例頁時不填，只顯示文字。 */
+  href?: string;
 }
 
 /** 「我怎麼工作」的一點。 */
@@ -216,6 +218,7 @@ export function buildHome(facts: Facts, site: Site): HomeContent {
         title: '庫存管理系統規劃',
         description:
           '我主導店舖進貨、出貨、調撥、退單與贈品領用的需求、操作流程與 Figma 介面，並執行 API 驗收。程式由其他工程師實作。',
+        href: '/work/inventory-system-planning/',
       },
     ],
     howIWork: [

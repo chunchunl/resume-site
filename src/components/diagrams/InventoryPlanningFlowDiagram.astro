@@ -1,0 +1,94 @@
+---
+/**
+ * 庫存管理系統規劃的流程圖（自製示意，不描摹真實畫面）。
+ * 畫的是我的規劃方法六個步驟，不是公司的業務流程：不畫單據、狀態、角色與系統架構。
+ * 從「介面原型與比對」回到「規則只寫一份」的虛線，表示規則變更時要同步更新。
+ * 顏色全部來自設計變數（透過 class），不用 style 屬性。
+ */
+const titleId = 'inventory-planning-flow-title';
+const descId = 'inventory-planning-flow-desc';
+const markerId = 'inventory-planning-flow-arrow';
+
+/** 六個步驟；縱向位置由索引算出。 */
+const STEPS = [
+  { label: '盤點現況', note: '確認資料來源與正本' },
+  { label: '分場決策', note: '問題整理成附建議的決策題' },
+  { label: '規則只寫一份', note: '註明決定者與日期' },
+  { label: '流程圖與狀態圖', note: '各部門依同一份規則溝通' },
+  { label: '介面原型與比對', note: '比對會議結論並找出落差' },
+  { label: '交接與驗收', note: '開發完成後執行 API 驗收' },
+];
+const TOP = 16;
+const BOX_WIDTH = 260;
+const STEP_HEIGHT = 56;
+const STEP_PITCH = 80;
+const stepY = (index: number): number => TOP + index * STEP_PITCH;
+
+/** 回頭更新的虛線：從第 5 步的右側回到第 3 步的右側。 */
+const LOOP_FROM = 4;
+const LOOP_TO = 2;
+const LOOP_X = 288;
+const loopStartY = stepY(LOOP_FROM) + STEP_HEIGHT / 2;
+const loopEndY = stepY(LOOP_TO) + STEP_HEIGHT / 2;
+const loopPath = `M${8 + BOX_WIDTH} ${loopStartY} H${LOOP_X} V${loopEndY} H${8 + BOX_WIDTH + 4}`;
+const LOOP_LINES = ['規則變更', '同步更新'];
+const loopTextTop = (loopStartY + loopEndY) / 2 - 12;
+
+const captionY = stepY(STEPS.length) + 8;
+const viewHeight = captionY + 16;
+---
+
+<figure class="diagram">
+  <svg viewBox={`0 0 360 ${viewHeight}`} role="img" aria-labelledby={titleId} aria-describedby={descId} xmlns="http://www.w3.org/2000/svg">
+    <title id={titleId}>庫存系統規劃的六個步驟</title>
+    <desc id={descId}>
+      首先盤點現況與資料正本，再分場開會，將問題整理成附建議方案的決策題。定案內容只寫入一份業務規則並註明決定者與日期，接著繪製流程圖與狀態圖、依規則設計介面原型並比對會議結論，最後交接開發並執行驗收。比對發現規則需要變更時，同步更新規則、流程圖與介面。
+    </desc>
+    <defs>
+      <marker id={markerId} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+        <path class="diagram__arrowhead" d="M0 0 L10 5 L0 10 Z"></path>
+      </marker>
+    </defs>
+
+    {
+      STEPS.map((step, index) => (
+        <g>
+          <rect class="diagram__box" x="8" y={stepY(index)} width={BOX_WIDTH} height={STEP_HEIGHT} rx="10"></rect>
+          <text class="diagram__step" x="28" y={stepY(index) + 24}>
+            {index + 1}
+          </text>
+          <text class="diagram__label" x="48" y={stepY(index) + 24}>
+            {step.label}
+          </text>
+          <text class="diagram__note" x="48" y={stepY(index) + 46}>
+            {step.note}
+          </text>
+          {index < STEPS.length - 1 && (
+            <line
+              class="diagram__line"
+              x1="138"
+              y1={stepY(index) + STEP_HEIGHT}
+              x2="138"
+              y2={stepY(index + 1) - 2}
+              marker-end={`url(#${markerId})`}
+            ></line>
+          )}
+        </g>
+      ))
+    }
+
+    <path class="diagram__line diagram__line--dashed" d={loopPath} marker-end={`url(#${markerId})`}></path>
+    {
+      LOOP_LINES.map((line, index) => (
+        <text class="diagram__note" x="324" y={loopTextTop + index * 24} text-anchor="middle">
+          {line}
+        </text>
+      ))
+    }
+
+    <text class="diagram__caption" x="8" y={captionY}>規則變更時，流程圖與介面同步更新</text>
+  </svg>
+  <figcaption>
+    圖：庫存系統規劃的六個步驟，依序為盤點現況、分場決策、規則只寫一份、流程圖與狀態圖、介面原型與比對、交接與驗收；比對發現規則需要變更時，同步更新規則、流程圖與介面。
+  </figcaption>
+</figure>

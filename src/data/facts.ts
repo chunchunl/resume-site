@@ -47,6 +47,13 @@ export interface Facts {
     /** 評估題組調整後的結果。 */
     evalAfter: Ratio;
   };
+  /** 庫存管理系統規劃（程式由其他工程師實作）。 */
+  inventory: {
+    /** 讓核心規則定案的前幾場跨部門會議場數。 */
+    alignmentMeetings: number;
+    /** 會議結論與介面原型第一次比對找出的落差項數。 */
+    gapItems: number;
+  };
 }
 
 /** 全站事實目前的值。 */
@@ -65,5 +72,9 @@ export const facts: Facts = {
     indexedChunks: 3700,
     evalBefore: { passed: 14, total: 17 },
     evalAfter: { passed: 18, total: 18 },
+  },
+  inventory: {
+    alignmentMeetings: 4,
+    gapItems: 26,
   },
 };

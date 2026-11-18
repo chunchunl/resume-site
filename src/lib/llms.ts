@@ -31,7 +31,7 @@ interface LlmsPage {
 /** 「頁面」段列出的頁面，順序即輸出順序。 */
 const PAGES: LlmsPage[] = [
   { name: '首頁', path: '/', description: '我是誰、三個代表案例、我怎麼工作與聯絡方式。' },
-  { name: '案例列表', path: '/work/', description: '三個案例，每個都寫明問題、我負責的範圍、驗證方式與結果。' },
+  { name: '案例列表', path: '/work/', description: '全部案例，每個都寫明問題、我負責的範圍、驗證方式與結果。' },
   { name: '接案服務', path: '/services/', description: '四項接案服務的內容、起價與合作方式。' },
   { name: '求職履歷', path: '/resume/', description: '專業摘要、工作經歷、技能與學歷，可下載 PDF。' },
   { name: '隱私說明', path: '/privacy/', description: '網站不使用 cookie，以及流量統計與來信怎麼處理。' },

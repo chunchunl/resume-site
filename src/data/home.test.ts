@@ -10,12 +10,14 @@ const factsA: Facts = {
   eventPlatform: { backendTests: 611, frontendTests: 322, loadTestRequests: 2455, e2eIssuesFixed: 13 },
   rewardSystem: { status: 'testing', milestoneVisits: 120 },
   rag: { indexedChunks: 4100, evalBefore: { passed: 11, total: 19 }, evalAfter: { passed: 21, total: 21 } },
+  inventory: { alignmentMeetings: 7, gapItems: 38 },
 };
 
 const factsB: Facts = {
   eventPlatform: { backendTests: 733, frontendTests: 288, loadTestRequests: 3566, e2eIssuesFixed: 27 },
   rewardSystem: { status: 'launched', milestoneVisits: 150 },
   rag: { indexedChunks: 5200, evalBefore: { passed: 9, total: 23 }, evalAfter: { passed: 25, total: 25 } },
+  inventory: { alignmentMeetings: 9, gapItems: 43 },
 };
 
 /** 兩個公開連結都有值的假身分資料；LinkedIn 用虛構網址。 */
@@ -84,6 +86,7 @@ describe('buildHome', () => {
     expect(home.otherWork).toHaveLength(1);
     expect(home.otherWork[0]?.title).toContain('庫存');
     expect(fullText(home.otherWork)).toContain('程式由其他工程師實作');
+    expect(home.otherWork[0]?.href).toBe('/work/inventory-system-planning/');
   });
 
   it('buildHome 卡片順序與連結', () => {

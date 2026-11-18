@@ -70,6 +70,13 @@ const fullName = siteFullName(site);
             <li class="other-list__item">
               <h3 class="other-list__title">{item.title}</h3>
               <p>{item.description}</p>
+              {item.href && (
+                <p class="other-list__more">
+                  <a href={item.href}>
+                    查看完整案例<span aria-hidden="true"> →</span>
+                  </a>
+                </p>
+              )}
             </li>
           ))
         }

@@ -17,12 +17,14 @@ const factsA: Facts = {
   eventPlatform: { backendTests: 611, frontendTests: 322, loadTestRequests: 2466, e2eIssuesFixed: 13 },
   rewardSystem: { status: 'testing', milestoneVisits: 137 },
   rag: { indexedChunks: 4200, evalBefore: { passed: 11, total: 19 }, evalAfter: { passed: 21, total: 21 } },
+  inventory: { alignmentMeetings: 7, gapItems: 38 },
 };
 
 const factsB: Facts = {
   eventPlatform: { backendTests: 733, frontendTests: 288, loadTestRequests: 3566, e2eIssuesFixed: 27 },
   rewardSystem: { status: 'launched', milestoneVisits: 245 },
   rag: { indexedChunks: 5200, evalBefore: { passed: 9, total: 23 }, evalAfter: { passed: 25, total: 25 } },
+  inventory: { alignmentMeetings: 9, gapItems: 43 },
 };
 
 /** 外部連結用虛構網址的假身分資料；正式 LinkedIn 網址裡有和事實相同的數字，比對數字時不用它。 */
@@ -50,8 +52,11 @@ const fakeServices: ServiceItem[] = [fakeService('alpha', 6000), fakeService('be
 
 /** 一組事實在 llms.txt 裡會出現的寫法（來自案例的摘要與結果）。 */
 function formattedValues(input: Facts): string[] {
-  const { eventPlatform, rewardSystem, rag } = input;
+  const { eventPlatform, rewardSystem, rag, inventory } = input;
   return [
+    // 庫存的兩個值只有 1～2 位數，不放進 rawValues（假資料的其他數字會含同樣的數字），只比對寫法與次數。
+    `前 ${formatNumber(inventory.alignmentMeetings)} 場`,
+    `${formatNumber(inventory.gapItems)} 項落差`,
     `後端 ${formatNumber(eventPlatform.backendTests)} 項`,
     `前端 ${formatNumber(eventPlatform.frontendTests)} 項`,
     `修正 ${formatNumber(eventPlatform.e2eIssuesFixed)} 個`,
@@ -79,7 +84,11 @@ function rawValues(input: Facts, options: { includeStatus: boolean }): string[] 
     formatRatio(rag.evalBefore, 'zh-TW'),
     formatRatio(rag.evalAfter, 'zh-TW'),
   ];
-  return options.includeStatus ? [...values, rewardStatusLabel(rewardSystem.status, 'zh-TW')] : values;
+  if (!options.includeStatus) return values;
+  // 「已上線」其他案例也會用（例如庫存的「店舖端已上線」），只比對獎勵系統結果裡的完整寫法；
+  // 測試中的狀態字只有獎勵系統會用，照舊比對裸字。
+  const label = rewardStatusLabel(rewardSystem.status, 'zh-TW');
+  return [...values, rewardSystem.status === 'launched' ? `目前狀態：${label}` : label];
 }
 
 /** 用一組事實與服務清單產生 llms.txt。 */
@@ -127,11 +136,16 @@ describe('buildLlmsTxt', () => {
     }
   });
 
-  it('buildLlmsTxt 列出五個頁面與三個案例', () => {
+  it('buildLlmsTxt 列出五個頁面與全部案例', () => {
     const text = officialText();
     const pageUrls = linkUrls(sectionOf(text, '頁面'));
     const caseUrls = linkUrls(sectionOf(text, '案例'));
     const cases = getCases('zh-TW', facts);
+
+    // 案例列表的描述不寫數量，案例增減時不會過時。
+    const workLine = sectionOf(text, '頁面').split('\n').find((line) => line.includes(`${site.url}/work/)`));
+    expect(workLine).toBeDefined();
+    expect(workLine).not.toMatch(/[一二三四五六七八九十\d]+\s*個案例/);
 
     expect(pageUrls).toEqual(['/', '/work/', '/services/', '/resume/', '/privacy/'].map((path) => `${site.url}${path}`));
     expect(caseUrls).toEqual(cases.map((content) => `${site.url}/work/${content.slug}/`));
