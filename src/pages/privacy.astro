@@ -1,0 +1,52 @@
+---
+/** 隱私說明頁：網站不用 cookie、流量統計、來信怎麼處理與怎麼要求刪除，最後列出公開信箱。 */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { buildPrivacy } from '../data/privacy';
+import { site } from '../data/site';
+import { siteFullName } from '../lib/seo';
+
+const content = buildPrivacy(site);
+---
+
+<BaseLayout
+  title={content.title}
+  description={`${siteFullName(site)} 個人網站的隱私說明：不使用 cookie、流量統計的方式，以及來信怎麼處理。`}
+>
+  <section class="section section--first" aria-labelledby="privacy-title">
+    <div class="container privacy">
+      <h1 class="page-title" id="privacy-title">{content.heading}</h1>
+      <p class="section__lead">{content.intro}</p>
+      {
+        content.sections.map((section, index) => (
+          <section class="privacy-section" aria-labelledby={`privacy-section-${index + 1}`}>
+            <h2 class="privacy-section__title" id={`privacy-section-${index + 1}`}>
+              {section.heading}
+            </h2>
+            {section.paragraphs.map((paragraph) => (
+              <p>{paragraph}</p>
+            ))}
+          </section>
+        ))
+      }
+      {
+        content.emails.length > 0 && (
+          <section class="privacy-section" data-section="emails" aria-labelledby="privacy-emails-title">
+            <h2 class="privacy-section__title" id="privacy-emails-title">
+              {content.emailsHeading}
+            </h2>
+            <ul class="contact-list">
+              {content.emails.map((email) => (
+                <li class="contact-list__item">
+                  <span class="contact-list__label">{email.label}</span>
+                  <a class="contact-list__value" href={`mailto:${email.address}`}>
+                    {email.address}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )
+      }
+    </div>
+  </section>
+</BaseLayout>

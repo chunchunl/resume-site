@@ -1,7 +1,7 @@
 import * as cheerio from 'cheerio';
 import { describe, expect, it } from 'vitest';
 import { site } from '../../src/data/site';
-import { listDistFiles, listHtmlFiles, readDist } from './helpers';
+import { isSitePath as isSameSitePath, listDistFiles, listHtmlFiles, readDist } from './helpers';
 
 const ONE_YEAR_IN_SECONDS = 31_536_000;
 
@@ -34,11 +34,6 @@ function parseHeadersFile(content: string): Map<string, Map<string, string>> {
     current?.set(line.slice(0, separator).trim().toLowerCase(), line.slice(separator + 1).trim());
   }
   return blocks;
-}
-
-/** 判斷資源網址是否為本站的絕對路徑（`/` 開頭，但不是 `//`）。 */
-function isSameSitePath(url: string | undefined): boolean {
-  return typeof url === 'string' && /^\/(?!\/)/.test(url);
 }
 
 describe('dist 基本檢查', () => {

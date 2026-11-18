@@ -995,6 +995,25 @@ a:hover {
   border-radius: var(--radius-pill);
 }
 
+/* ---------- 隱私說明 ---------- */
+
+.privacy {
+  max-width: 48rem;
+}
+
+.privacy-section {
+  margin-top: var(--space-6);
+}
+
+.privacy-section__title {
+  margin-bottom: var(--space-3);
+  font-size: var(--text-xl);
+}
+
+.privacy-section p + p {
+  margin-top: var(--space-3);
+}
+
 /* ---------- 平板以上 ---------- */
 
 @media (min-width: 48rem) {
