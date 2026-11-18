@@ -1,0 +1,50 @@
+---
+/**
+ * 首頁兩個主按鈕前的小圖示，純裝飾用（按鈕本身的文字已足夠說明用途）。
+ * `kind="services"` 為對話框圖示（洽詢）、`kind="resume"` 為文件圖示（履歷）。
+ * 顏色一律用 currentColor，跟著按鈕文字顏色走；不用 style 屬性。
+ */
+interface Props {
+  kind: 'services' | 'resume';
+}
+
+const { kind } = Astro.props;
+---
+
+{
+  kind === 'services' ? (
+    <svg
+      class="hero__action-icon"
+      viewBox="0 0 20 20"
+      width="20"
+      height="20"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.6"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path d="M3 4.5h14v8.5a1.5 1.5 0 0 1-1.5 1.5H8l-3.5 3v-3H4.5A1.5 1.5 0 0 1 3 13V4.5Z" />
+    </svg>
+  ) : (
+    <svg
+      class="hero__action-icon"
+      viewBox="0 0 20 20"
+      width="20"
+      height="20"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.6"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path d="M6 2.5h6l3 3v12h-12v-15Z" />
+      <path d="M12 2.5v3h3" />
+      <path d="M7 10h6M7 12.5h6M7 15h4" />
+    </svg>
+  )
+}

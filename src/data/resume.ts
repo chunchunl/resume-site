@@ -154,6 +154,7 @@ const EDUCATION: ResumeEntry[] = [
  */
 export function buildResume(facts: Facts, site: Site): ResumeContent {
   const { eventPlatform } = facts;
+  const e2eIssuesFixed = formatNumber(eventPlatform.e2eIssuesFixed);
 
   const name = siteFullName(site);
 
@@ -175,7 +176,7 @@ export function buildResume(facts: Facts, site: Site): ResumeContent {
         role: '前端工程師',
         period: '2025-07 至今',
         points: [
-          `從零獨立開發活動報名與驗票平台（React／TypeScript、Node.js、SQL Server、Azure），涵蓋店舖報名、QR 票券、手機驗票與即時看板；後端 ${formatNumber(eventPlatform.backendTests)} 項、前端 ${formatNumber(eventPlatform.frontendTests)} 項自動測試通過，UAT 壓測 ${formatNumber(eventPlatform.loadTestRequests)} 個請求無非預期錯誤。`,
+          `從零獨立開發活動報名與驗票平台（React／TypeScript、Node.js、SQL Server、Azure），涵蓋店舖報名、QR 票券、手機驗票與即時看板；後端 ${formatNumber(eventPlatform.backendTests)} 項、前端 ${formatNumber(eventPlatform.frontendTests)} 項自動測試通過，UAT 壓測 ${formatNumber(eventPlatform.loadTestRequests)} 個請求無非預期錯誤，並於上線前以端到端驗證找出並修正 ${e2eIssuesFixed} 個跨角色問題。`,
           '獨立開發會員運動里程碑獎勵系統（C#／.NET、SQL Server、Hangfire），設計狀態機與可重新執行而不重複的每日／每週批次，完成會員端與店舖端。',
           '主導庫存系統需求、操作流程與 Figma 規劃，整合總部與店舖多站流程並執行 API 驗收；程式由其他工程師實作。',
           '建立 Astro 衛教內容站原型，完成正式文章頁 AEO 技術檢測。',

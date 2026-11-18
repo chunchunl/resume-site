@@ -2,6 +2,7 @@
 /** 首頁：第一屏、代表作、其他作品、工作方式、聯絡。 */
 import CaseCard from '../components/CaseCard.astro';
 import ContactBlock from '../components/ContactBlock.astro';
+import HeroActionIcon from '../components/HeroActionIcon.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { facts } from '../data/facts';
 import { buildHome } from '../data/home';
@@ -10,6 +11,11 @@ import { buildPersonJsonLd, buildWebSiteJsonLd, siteFullName } from '../lib/seo'
 
 const home = buildHome(facts, site);
 const fullName = siteFullName(site);
+
+/** 依連結網址決定主按鈕圖示；求職履歷用文件圖示，其餘（接案洽詢）用對話框圖示。 */
+function actionIconKind(href: string): 'services' | 'resume' {
+  return href === '/resume/' ? 'resume' : 'services';
+}
 ---
 
 <BaseLayout
@@ -30,6 +36,7 @@ const fullName = siteFullName(site);
           home.hero.actions.map((action, index) => (
             <li>
               <a class:list={['button', index === 0 ? 'button--primary' : 'button--secondary']} href={action.href}>
+                <HeroActionIcon kind={actionIconKind(action.href)} />
                 {action.label}
               </a>
             </li>

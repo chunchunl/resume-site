@@ -24,7 +24,7 @@ const fullName = siteFullName(site);
       <h1 class="page-title" id="services-title">接案服務</h1>
       <p class="section__lead">{content.intro}</p>
       <div class="service-grid">
-        {content.services.map((service) => <ServiceCard service={service} />)}
+        {content.services.map((service) => <ServiceCard service={service} contactEmail={content.contactEmail} />)}
       </div>
     </div>
   </section>
@@ -35,6 +35,16 @@ const fullName = siteFullName(site);
       <ol class="rule-list">
         {content.rules.map((rule) => <li>{rule}</li>)}
       </ol>
+    </div>
+  </section>
+
+  <section class="section" data-section="disclaimer" aria-labelledby="disclaimer-title">
+    <div class="container">
+      <h2 class="section__title" id="disclaimer-title">{content.disclaimerTitle}</h2>
+      <p class="section__lead">{content.disclaimerIntro}</p>
+      <ul class="rule-list rule-list--unordered">
+        {content.disclaimer.map((item) => <li>{item}</li>)}
+      </ul>
     </div>
   </section>
 

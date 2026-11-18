@@ -20,16 +20,21 @@ const factsB: Facts = {
   inventory: { alignmentMeetings: 9, gapItems: 43 },
 };
 
-/** 求職頁會用到的三個事實，在頁面上的寫法。 */
+/** 求職頁會用到的四個事實，在頁面上的寫法。 */
 function formattedValues(source: Facts): string[] {
   return [
     `後端 ${formatNumber(source.eventPlatform.backendTests)} 項`,
     `前端 ${formatNumber(source.eventPlatform.frontendTests)} 項`,
     `${formatNumber(source.eventPlatform.loadTestRequests)} 個請求`,
+    `修正 ${formatNumber(source.eventPlatform.e2eIssuesFixed)} 個跨角色問題`,
   ];
 }
 
-/** 三個事實的數值本身（不帶單位），用來確認另一份輸出完全沒有它。 */
+/**
+ * 三個事實的數值本身（不帶單位），用來確認另一份輸出完全沒有它。
+ * `e2eIssuesFixed` 的正式值「10」不放進來比對：履歷的期間「2024-10」本身就含有
+ * 這個字串，裸數字比對會誤判，所以這個值只透過 `formattedValues` 的完整寫法核對。
+ */
 function rawValues(source: Facts): string[] {
   return [
     formatNumber(source.eventPlatform.backendTests),

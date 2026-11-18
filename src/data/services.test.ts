@@ -3,7 +3,7 @@ import { getCases } from './cases';
 import { collectStrings, writingRuleViolations } from './cases/test-utils';
 import { SLUG_PATTERN } from './cases/types';
 import { facts } from './facts';
-import { buildServices, formatServicePrice, type ServiceItem } from './services';
+import { buildServiceInquiryMailto, buildServices, formatServicePrice, type ServiceItem } from './services';
 import { site, type Site } from './site';
 
 /** 接案信箱還沒定案的假身分資料。 */
@@ -119,6 +119,32 @@ describe('buildServices', () => {
 
   it('buildServices 文案規則', () => {
     expect(writingRuleViolations(collectStrings(buildServices(site)))).toEqual([]);
+  });
+
+  it('buildServices 合作注意事項與合作規則不矛盾', () => {
+    const content = buildServices(site);
+
+    expect(content.disclaimerTitle.trim()).not.toBe('');
+    expect(content.disclaimerIntro.trim()).not.toBe('');
+    expect(content.disclaimer.length).toBeGreaterThanOrEqual(1);
+    // 注意事項講「範圍外」才另外計價，不能跟合作規則「報價含 2 輪修改」矛盾，所以不寫死的輪數。
+    expect(content.disclaimer.join('\n')).not.toMatch(/\d+\s*輪/);
+  });
+});
+
+describe('buildServiceInquiryMailto', () => {
+  it('buildServiceInquiryMailto 主旨與內文都帶入服務名稱，且正確編碼', () => {
+    const service = fakeService({ priceFrom: 8000, priceUnit: null, quoteRequired: false });
+    const href = buildServiceInquiryMailto(service, 'work@lin-yu-chun.com');
+
+    expect(href.startsWith('mailto:work@lin-yu-chun.com?subject=')).toBe(true);
+    const url = new URL(href);
+    expect(url.pathname).toBe('work@lin-yu-chun.com');
+    expect(decodeURIComponent(url.searchParams.get('subject') ?? '')).toBe(`洽詢服務：${service.name}`);
+    const body = decodeURIComponent(url.searchParams.get('body') ?? '');
+    expect(body).toContain(service.name);
+    expect(body).toContain('\n');
+    expect(body).not.toContain('\\n');
   });
 });
 

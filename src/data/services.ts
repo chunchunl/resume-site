@@ -49,6 +49,12 @@ export interface ServicesContent {
   services: ServiceItem[];
   /** 合作規則。 */
   rules: string[];
+  /** 合作注意事項區塊的標題。 */
+  disclaimerTitle: string;
+  /** 注意事項開頭的一段說明。 */
+  disclaimerIntro: string;
+  /** 合作注意事項條列；與 `rules` 分開，避免和既有的具體承諾（2 輪修改、分期比例）混在一起或互相矛盾。 */
+  disclaimer: string[];
   /** 常見問題；FAQPage JSON-LD 讀同一份。 */
   faq: FaqItem[];
   /** 相關案例區塊的標題。 */
@@ -112,6 +118,17 @@ const SERVICES: ServiceItem[] = [
 /** 合作規則，只寫這三條。 */
 const RULES = ['先確認需求範圍，再提供報價。', '報價含 2 輪修改。', '分期付款：一般案 50／50，系統案 30／40／30。'];
 
+/**
+ * 合作注意事項，與 `RULES` 分開列：這些是一般性的免責說明，不是具體承諾，
+ * 用詞刻意避開和 `RULES`、`FAQ` 重複的具體數字（2 輪修改、分期比例），避免兩段文字互相矛盾。
+ */
+const DISCLAIMER = [
+  '新增需求或超出報價範圍的修改，可能另外計價。',
+  '若涉及第三方服務（例如網域、主機或外部 API），費用依報價約定處理。',
+  '網站上線後的例行維護需另行確認，不含在起價內。',
+  'AEO 與 SEO／AI 搜尋優化服務，不保證特定搜尋排名或 AI 搜尋曝光結果。',
+];
+
 /** 常見問題；三條規則各一組，另一組說明案例的來歷。 */
 const FAQ: FaqItem[] = [
   { question: '如何開始合作？', answer: '請先來信說明需求，我會與您確認需求範圍，再提供報價。' },
@@ -142,6 +159,9 @@ export function buildServices(site: Site): ServicesContent {
     intro: '提供四項服務，各項均列明適用對象、服務內容、不含項目與起價。',
     services: SERVICES,
     rules: RULES,
+    disclaimerTitle: '合作注意事項',
+    disclaimerIntro: '本站服務由個人獨立提供。實際服務範圍、交付時程及費用，均以雙方確認之正式報價與合作約定為準。',
+    disclaimer: DISCLAIMER,
     faq: FAQ,
     relatedTitle: '相關作品',
     relatedCases: RELATED_CASES,
@@ -164,4 +184,15 @@ export function formatServicePrice(service: ServiceItem, lang: Locale = 'zh-TW')
   const unit = service.priceUnit === null ? '' : `${service.priceUnit} `;
   const quote = service.quoteRequired ? '，需洽談' : '';
   return `${unit}NT$${formatNumber(service.priceFrom)} 起${quote}`;
+}
+
+/**
+ * 服務卡「洽詢此服務」的 mailto 連結：主旨帶入服務名稱，內文預填需求描述欄位。
+ * 不起後端、不存個資，點擊只是開啟訪客自己的郵件程式。
+ * @param email 接案信箱；呼叫端已確認非 `null` 才會用到這個函式。
+ */
+export function buildServiceInquiryMailto(service: ServiceItem, email: string): string {
+  const subject = encodeURIComponent(`洽詢服務：${service.name}`);
+  const body = encodeURIComponent(`您好，我想詢問「${service.name}」。\n\n需求簡述：\n`);
+  return `mailto:${email}?subject=${subject}&body=${body}`;
 }

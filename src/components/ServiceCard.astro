@@ -1,16 +1,18 @@
 ---
 /**
- * 接案頁的服務卡：名稱、起價、適用對象、服務內容與不含項目。
+ * 接案頁的服務卡：名稱、起價、適用對象、服務內容、不含項目與洽詢入口。
  * 卡片的 data-section 是服務代號，測試用它對照 JSON-LD 的價格。
  */
-import { formatServicePrice, type ServiceItem } from '../data/services';
+import { buildServiceInquiryMailto, formatServicePrice, type ServiceItem } from '../data/services';
 
 interface Props {
   /** 服務內容。 */
   service: ServiceItem;
+  /** 接案信箱；為 `null` 時不顯示「洽詢此服務」按鈕（沿用全站「信箱未定案不輸出」的規則）。 */
+  contactEmail: string | null;
 }
 
-const { service } = Astro.props;
+const { service, contactEmail } = Astro.props;
 const titleId = `service-${service.id}`;
 ---
 
@@ -39,4 +41,11 @@ const titleId = `service-${service.id}`;
       </dd>
     </div>
   </dl>
+  {
+    contactEmail && (
+      <a class="button button--secondary service-card__inquire" href={buildServiceInquiryMailto(service, contactEmail)}>
+        洽詢此服務
+      </a>
+    )
+  }
 </article>
