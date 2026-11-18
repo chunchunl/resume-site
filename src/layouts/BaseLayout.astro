@@ -38,6 +38,9 @@ const beacon = buildAnalyticsBeacon(site);
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {/* 網站圖示：SVG 給新瀏覽器，ICO 給只認 ICO 的環境；兩個檔都在 public/。ICO 只標 32x32，瀏覽器才會優先選 SVG。 */}
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <title>{meta.title}</title>
     <meta name="description" content={meta.description} />
     {meta.robots && <meta name="robots" content={meta.robots} />}

@@ -1,7 +1,9 @@
 import * as cheerio from 'cheerio';
+import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
+import { parseHeadersFile } from '../../scripts/lib/headers-file';
 import { site } from '../../src/data/site';
-import { isSitePath as isSameSitePath, listDistFiles, listHtmlFiles, readDist } from './helpers';
+import { distDir, isSitePath as isSameSitePath, listDistFiles, listHtmlFiles, readDist } from './helpers';
 
 const ONE_YEAR_IN_SECONDS = 31_536_000;
 
@@ -50,30 +52,6 @@ function parseCsp(value: string): Map<string, string[]> {
     if (name) directives.set(name, sources);
   }
   return directives;
-}
-
-/**
- * 解析 _headers：沒有縮排的一行是路徑規則，底下縮排的行是那條規則的標頭。
- * 回傳「路徑規則 → （小寫標頭名稱 → 值）」。
- * 同一個路徑規則出現兩次會直接丟錯：不然後面那段會蓋掉前面那段，測試就看不到前面加的標頭。
- */
-function parseHeadersFile(content: string): Map<string, Map<string, string>> {
-  const blocks = new Map<string, Map<string, string>>();
-  let current: Map<string, string> | undefined;
-
-  for (const line of content.split('\n')) {
-    if (line.trim() === '' || line.trim().startsWith('#')) continue;
-    if (!/^\s/.test(line)) {
-      const rule = line.trim();
-      if (blocks.has(rule)) throw new Error(`_headers 的路徑規則重複：${rule}`);
-      current = new Map();
-      blocks.set(rule, current);
-      continue;
-    }
-    const separator = line.indexOf(':');
-    current?.set(line.slice(0, separator).trim().toLowerCase(), line.slice(separator + 1).trim());
-  }
-  return blocks;
 }
 
 describe('dist 基本檢查', () => {
@@ -241,6 +219,26 @@ describe('dist 基本檢查', () => {
     const llms = parseHeadersFile(readDist('_headers')).get('/llms.txt');
 
     expect(llms?.get('content-type')).toBe('text/plain; charset=utf-8');
+  });
+
+  it('dist 每頁有站內圖示', () => {
+    // 瀏覽器在頁面沒有指定圖示時會自己要 /favicon.ico，網站沒有這個檔就會在 console 留下 404。
+    const files = listDistFiles();
+    for (const file of listHtmlFiles()) {
+      const $ = cheerio.load(readDist(file));
+      const hrefs = $('link[rel="icon"]')
+        .map((_, element) => $(element).attr('href') ?? '')
+        .get();
+      // 每頁都要有 SVG 與 ICO 兩個圖示，而且都指向 dist 裡存在的站內檔案。
+      expect(hrefs.toSorted(), `${file} 的網站圖示`).toEqual(['/favicon.ico', '/favicon.svg']);
+      for (const href of hrefs) {
+        expect(files, `${file} 的圖示 ${href} 不在 dist`).toContain(href.slice(1));
+      }
+    }
+
+    // 不看 HTML 的請求（例如直接開 PDF）仍會要 /favicon.ico：檔案要存在，而且是 ICO 格式（檔頭 00 00 01 00）。
+    const ico = readFileSync(`${distDir}/favicon.ico`);
+    expect([...ico.subarray(0, 4)]).toEqual([0, 0, 1, 0]);
   });
 
   it('dist 沒有 source map', () => {

@@ -19,6 +19,7 @@
     "check:facts": "tsx scripts/check-hardcoded-facts.ts",
     "check:content": "astro build && tsx scripts/check-content.ts",
     "scan:sensitive": "tsx scripts/scan-sensitive.ts",
+    "check:production": "tsx scripts/check-production.ts",
     "build:pdf": "tsx scripts/build-pdf.ts",
     "verify": "npm run typecheck && npm run lint && npm run test && npm run check:facts && npm run build && npm run test:dist && npm run scan:sensitive",
     "deploy": "npm run check:content && npm run verify && wrangler deploy"

@@ -15,8 +15,20 @@ describe('wrangler 設定', () => {
     expect(config.assets).toEqual({ directory: './dist', not_found_handling: '404-page' });
     expect(config.workers_dev).toBe(true);
     expect(config.preview_urls).toBe(true);
-    // 只有靜態資源：沒有 Worker 程式、不綁帳號、不放變數、沒有任何 binding；正式網域在之後的 ticket 才加。
-    // 用白名單：多了任何設定鍵（例如 main、account_id、vars、route、routes、env）都會失敗。
-    expect(Object.keys(config).sort()).toEqual(['$schema', 'assets', 'compatibility_date', 'name', 'preview_urls', 'workers_dev']);
+    // 只有靜態資源：沒有 Worker 程式、不綁帳號、不放變數、沒有任何 binding。
+    // 用白名單：多了任何設定鍵（例如 main、account_id、vars、route、env）都會失敗。
+    expect(Object.keys(config).sort()).toEqual(['$schema', 'assets', 'compatibility_date', 'name', 'preview_urls', 'routes', 'workers_dev']);
+  });
+
+  it('wrangler 設定正式網域', () => {
+    const config = readWranglerConfig();
+
+    // 正式網域只綁主網域一筆；www 由 Cloudflare 的轉址規則轉到主網域，不綁到 Worker。
+    expect(config.routes).toEqual([{ pattern: 'lin-yu-chun.com', custom_domain: true }]);
+    // 有 routes 時沒寫 workers_dev，wrangler 會推斷成 false，預覽網址就會消失；要明確保留。
+    expect(config.workers_dev).toBe(true);
+    for (const key of ['main', 'account_id', 'vars']) {
+      expect(config, `不應該有 ${key}`).not.toHaveProperty(key);
+    }
   });
 });
