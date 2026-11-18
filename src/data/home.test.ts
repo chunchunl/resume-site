@@ -170,6 +170,19 @@ describe('buildHome', () => {
     expect(contact.description).toContain('兩個');
   });
 
+  it('buildHome 聯絡說明提醒可以複製信箱', () => {
+    // 電腦沒有設定郵件程式時，點 mailto: 連結不會有反應；提醒訪客可以複製信箱自己寄。
+    const hint = '點信箱會開啟電腦的郵件程式；沒有反應時，可以複製信箱，從你常用的信箱寄信。';
+
+    // 整句比對：提醒接在原本的說明後面、只出現一次。
+    expect(buildHome(factsA, fullSite).contact.description).toBe(`接案與求職分成兩個信箱，請寫信到對應的位址。${hint}`);
+    const oneEmail = buildHome(factsA, { ...fullSite, contactEmails: { work: null, jobs: fullSite.contactEmails.jobs } });
+    expect(oneEmail.contact.description).toBe(`請寫信到下面的信箱。${hint}`);
+    // 沒有任何信箱時，不提信箱。
+    const noEmail = buildHome(factsA, { ...fullSite, contactEmails: { work: null, jobs: null } });
+    expect(noEmail.contact.description).not.toContain(hint);
+  });
+
   it('buildHome 連結或信箱為 null 時不輸出那一個', () => {
     const home = buildHome(factsA, {
       ...fullSite,

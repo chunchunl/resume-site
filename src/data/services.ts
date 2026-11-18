@@ -1,5 +1,6 @@
 import { formatNumber, type Locale } from '../lib/format';
 import type { FaqItem } from '../lib/seo';
+import { EMAIL_COPY_HINT } from './home';
 import type { Site } from './site';
 
 /** 一項接案服務。 */
@@ -134,6 +135,9 @@ const RELATED_CASES: RelatedCase[] = [
  * @param site 網站身分；接案信箱為 `null` 時，頁面不輸出信箱連結。
  */
 export function buildServices(site: Site): ServicesContent {
+  // 有接案信箱時才附上複製信箱的提醒；沒有信箱時頁面不顯示聯絡區塊。
+  const copyHint = site.contactEmails.work ? EMAIL_COPY_HINT : '';
+
   return {
     intro: '我接四種案子。每一項都寫明適合誰、包含什麼、不包含什麼，以及從多少錢起。',
     services: SERVICES,
@@ -143,7 +147,7 @@ export function buildServices(site: Site): ServicesContent {
     relatedCases: RELATED_CASES,
     contact: {
       title: '寫信給我',
-      description: '請簡單說明需求、預計時程與預算範圍，我會先回信確認需求範圍。',
+      description: `請簡單說明需求、預計時程與預算範圍，我會先回信確認需求範圍。${copyHint}`,
     },
     contactEmail: site.contactEmails.work,
   };

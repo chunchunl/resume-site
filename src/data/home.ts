@@ -133,10 +133,16 @@ export function siteProfiles(site: Site): HomeLink[] {
   ]);
 }
 
-/** 依實際有幾個信箱產生聯絡說明，避免文字和資料對不上。 */
+/**
+ * 信箱旁的提醒：電腦沒有設定郵件程式時，點 `mailto:` 連結不會有反應，訪客可以複製信箱自己寄。
+ * 首頁與接案頁的聯絡說明共用這一句。
+ */
+export const EMAIL_COPY_HINT = '點信箱會開啟電腦的郵件程式；沒有反應時，可以複製信箱，從你常用的信箱寄信。';
+
+/** 依實際有幾個信箱產生聯絡說明，避免文字和資料對不上；有信箱時附上複製信箱的提醒。 */
 function contactDescription(emailCount: number): string {
-  if (emailCount >= 2) return '接案與求職分成兩個信箱，請寫信到對應的位址。';
-  if (emailCount === 1) return '請寫信到下面的信箱。';
+  if (emailCount >= 2) return `接案與求職分成兩個信箱，請寫信到對應的位址。${EMAIL_COPY_HINT}`;
+  if (emailCount === 1) return `請寫信到下面的信箱。${EMAIL_COPY_HINT}`;
   return '可以從下面的連結找到我。';
 }
 
