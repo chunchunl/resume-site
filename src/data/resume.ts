@@ -121,8 +121,11 @@ const EDUCATION: ResumeEntry[] = [
     org: '台北市電器商業同業公會',
     role: 'GitLab 與 DevOps 應用實作班',
     period: '2025-08 至 2025-11',
-    // 課堂練習以 AI 協助完成，不是獨立操作，所以只列完訓事實，不列具體技術內容（母稿「不應提前寫成精通」）。
-    points: [],
+    // 課堂練習以 AI 協助完成，不是獨立操作；以下只描述課程涵蓋的內容，不當成 Erica 已獨立掌握的技能
+    // （對應的「技能」區塊不會把 GitLab CI/CD、Docker、Kubernetes、SAST 列為已掌握的技能）。
+    points: [
+      'Git 分支策略（Git Flow）、GitLab 專案與權限管理、Docker 容器化與 GitLab CI/CD 多階段 Pipeline，並整合自動化測試與安全掃描。',
+    ],
   },
   {
     org: '資策會',

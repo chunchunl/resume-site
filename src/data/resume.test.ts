@@ -79,7 +79,19 @@ describe('buildResume', () => {
   it('buildResume 技能不列未成熟項目', () => {
     const skillText = collectStrings(buildResume(facts, site).skills).join('\n');
 
-    for (const banned of ['Python', 'Docker', 'LangChain', 'LangGraph', '平台工程', 'Agent runtime', 'orchestration']) {
+    for (const banned of [
+      'Python',
+      'Docker',
+      'LangChain',
+      'LangGraph',
+      '平台工程',
+      'Agent runtime',
+      'orchestration',
+      'Kubernetes',
+      'GitLab CI',
+      'SAST',
+      'DevSecOps',
+    ]) {
       expect(skillText, banned).not.toContain(banned);
     }
     expect(buildResume(facts, site).skills.map((group) => group.name)).toEqual([
@@ -98,14 +110,13 @@ describe('buildResume', () => {
     for (const banned of ['TypeScript', 'Tailwind', 'Vue']) expect(text, banned).not.toContain(banned);
   });
 
-  it('buildResume GitLab 與 DevOps 結訓只列完訓事實，不列未獨立操作的技術', () => {
+  it('buildResume GitLab 與 DevOps 結訓只描述課程內容，不宣稱個人已獨立掌握', () => {
     const entry = buildResume(facts, site).education.find((item) => item.org.includes('電器商業同業公會'));
 
     expect(entry).toBeDefined();
-    expect(entry?.points).toEqual([]);
     const text = collectStrings(entry).join('\n');
-    // Erica 2026-11-19：課堂練習用 AI 完成、沒有手刻過，不寫成已掌握的技術。
-    for (const banned of ['GitLab CI', 'CI/CD', 'Docker', 'Kubernetes', 'SAST', 'DevSecOps']) {
+    // Erica 2026-11-19：課堂練習用 AI 完成、沒有手刻過；課程內容可以列，但不能寫成「我已獨立完成／操作／精通」。
+    for (const banned of ['獨立完成', '獨立操作', '精通', '獨立負責', '獨立開發']) {
       expect(text, banned).not.toContain(banned);
     }
   });
