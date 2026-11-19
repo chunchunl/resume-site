@@ -54,7 +54,7 @@ describe('buildResume', () => {
     expect(content.experience[1]?.points).toHaveLength(1);
     expect(content.experience[2]?.points).toHaveLength(1);
     expect(content.skills).toHaveLength(4);
-    expect(content.education).toHaveLength(3);
+    expect(content.education).toHaveLength(4);
     // Erica 2026-11-18：求職頁不公開可到職時間。
     expect(content).not.toHaveProperty('availability');
     expect(content.headings).not.toHaveProperty('availability');
@@ -98,11 +98,23 @@ describe('buildResume', () => {
     for (const banned of ['TypeScript', 'Tailwind', 'Vue']) expect(text, banned).not.toContain(banned);
   });
 
+  it('buildResume GitLab 與 DevOps 結訓只列完訓事實，不列未獨立操作的技術', () => {
+    const entry = buildResume(facts, site).education.find((item) => item.org.includes('電器商業同業公會'));
+
+    expect(entry).toBeDefined();
+    expect(entry?.points).toEqual([]);
+    const text = collectStrings(entry).join('\n');
+    // Erica 2026-11-19：課堂練習用 AI 完成、沒有手刻過，不寫成已掌握的技術。
+    for (const banned of ['GitLab CI', 'CI/CD', 'Docker', 'Kubernetes', 'SAST', 'DevSecOps']) {
+      expect(text, banned).not.toContain(banned);
+    }
+  });
+
   it('buildResume 期間只到月', () => {
     const content = buildResume(facts, site);
     const periods = [...content.experience, ...content.education].map((item) => item.period);
 
-    expect(periods).toHaveLength(6);
+    expect(periods).toHaveLength(7);
     for (const period of periods) {
       expect(period, period).toMatch(/^\d{4}-\d{2} 至(?: \d{4}-\d{2}|今)$/);
       expect(period, period).not.toMatch(FULL_DATE_PATTERN);
